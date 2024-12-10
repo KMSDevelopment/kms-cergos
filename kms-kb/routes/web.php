@@ -105,9 +105,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/revision/modellen/read', [RevisionsController::class, 'read_modellen_revision'])->name('revision.modellen.read');
     Route::post('/revision/modellen/unlink', [RevisionsController::class, 'unlink_modellen_revision'])->name('revision.modellen.unlink');
     Route::post('/revision/modellen/link', [RevisionsController::class, 'link_modellen_revision'])->name('revision.modellen.link');
+    Route::post('/revision/models/link', [RevisionsController::class, 'link_revision_models'])->name('revision.models.link');
     Route::get('/revision/ticket/{id}', [RevisionsController::class, 'view_ticket'])->name('revision.ticket');
     Route::post('/revision/tickets/read', [RevisionsController::class, 'read_revision_tickets'])->name('revision.ticket.read');
     Route::post('/revision/ticket/link', [RevisionsController::class, 'link_revision_tickets'])->name('revision.ticket.link');
+    Route::post('/revision/part/link', [RevisionsController::class, 'link_part_revision'])->name('revision.part.link');
+    
+    
+
+    Route::get('/revision/{id}', [RevisionsController::class, 'view_revision'])->name('revision.view');
 
     Route::post('/ticket/manual/read', [RevisionsController::class, 'ticket_manual_read'])->name('ticket.manual.read');
     Route::post('/ticket/parts/read', [RevisionsController::class, 'ticket_manual_parts'])->name('ticket.manual.parts');
@@ -121,6 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/ticket/customer/link', [RevisionsController::class, 'ticket_customer_link'])->name('ticket.customer.link');
     Route::post('/ticket/user/read', [RevisionsController::class, 'ticket_user_read'])->name('ticket.user.read');
     Route::post('/ticket/user/link', [RevisionsController::class, 'ticket_user_link'])->name('ticket.user.link');
+    Route::post('/tickets/all', [RevisionsController::class, 'tickets_all'])->name('tickets.all');
 
     Route::post('/revision/checked', [RevisionsController::class, 'revision_check'])->name('revision.check');
 

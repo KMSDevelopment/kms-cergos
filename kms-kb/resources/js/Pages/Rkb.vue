@@ -177,7 +177,9 @@ async function updateRevisionComplain(e) {
                         <h3 class="kms-column-subtitle mt-2" style="font-size:17px;">
                             <input type="checkbox" class="chbrevisions kms-checkboxes" :id="item[0]" style="float:left; margin-top:3px; margin-right:5px;">
                             <i class='bx bx-label kms-icons-sm-lbl' style="float:left;"></i>
-                            <input type="text" class="form form-control" style="border:none; margin-top:-8px; color:#FFF; background:transparent; width:90%; float:left; font-size:14px;" :value="item[3]" @keydown="updateRevisionTitle($event)" @keyup="updateRevisionTitle($event)" @change="updateRevisionTitle($event)" :id="item[0]">
+                            <input type="text" class="form form-control" style="border:none; margin-top:-8px; color:#FFF; background:transparent; width:85%; float:left; font-size:14px;" :value="item[3]" @keydown="updateRevisionTitle($event)" @keyup="updateRevisionTitle($event)" @change="updateRevisionTitle($event)" :id="item[0]">
+
+                            <a :href="'/revision/'+item[0]" class="btn btn-warning" style="border-radius:50%; position:absolute; top:20px;"><i class="bx bx-cog"></i></a>
                         </h3>
                         <hr class="mt-5">
 

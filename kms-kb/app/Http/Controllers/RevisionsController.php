@@ -771,6 +771,13 @@ class RevisionsController extends Controller
         RevisionModels::where('revision_id',$request->revision_id)->delete();
     }
 
+    public function tickets_all(Request $request)
+    {
+        $tickets = CustomerRevisions::all();
+        return response()->json(['tickets' => $tickets]);
+    }
+    
+
     public function link_modellen_revision(Request $request)
     {
         RevisionModels::create([
@@ -780,7 +787,54 @@ class RevisionsController extends Controller
     }
 
 
+    public function link_revision_models(Request $request)
+    {
+        RevisionModels::where('revision_id',$request->revision_id)->delete();
+        $revision_id = $request->revision_id;
+        $partarray = $request->chbmodellen;
+        foreach($partarray as $part_id)
+        {
+            RevisionModels::create([
+                'revision_id' => $revision_id,
+                'model_id' => $part_id
+            ]);
+        }
+        
+        return Redirect::to('/revision/'.$revision_id);
+    }
+    
 
+
+    public function view_revision(Request $request)
+    {
+
+        $all_customers = Customers::all();
+        $all_users = User::all();
+        $modeldata = array();
+
+        $revision_id = $request->id;
+        $revisions = Revisions::find($revision_id);
+        $revisions_customers = CustomerRevisions::where('revision_id',$revision_id)->with('customer')->with('engineer')->get();
+        $manuals = Manuals::where('revision_id', $revision_id)->get();
+        $revisions_models = RevisionModels::where('revision_id',$revision_id)->get();
+        $parts = LinkedParts::where('revision_id',$revision_id)->with('part')->get();
+
+        foreach($revisions_models as $rev_model)
+        {
+            $modeldata[$rev_model->id] = BrandModels::where('id',$rev_model->model_id)->with('brand')->get();
+        }
+
+        return Inertia::render('Revision', [
+            'revision' => $revisions,
+            'revisions_models' => $revisions_models,
+            'revisions_customers' => $revisions_customers,
+            'model' => $modeldata,
+            'manuals' => $manuals,
+            'parts'=>$parts,
+            'customers'=>$all_customers,
+            'users'=>$all_users
+        ]);
+    }
 
 
 
@@ -926,11 +980,12 @@ class RevisionsController extends Controller
         return response()->json(['parts' => $parts, 'total_parts', $countparts]);
     }
 
+
     public function ticket_link_parts(Request $request)
     {
         $parts = $request->chbticket;
-        $revisions_customers = CustomerRevisions::where('ticket_no',$request->ticket_no)->first();
-        $revision_id = $revisions_customers->revision_id;
+        $data = CustomerRevisions::where('ticket_no',$request->ticket_no);
+        $revision_id = $data->revision_id;
 
         foreach($parts as $part)
         {
@@ -942,6 +997,27 @@ class RevisionsController extends Controller
         
         return Redirect::to('/revision/ticket/'.$request->ticket_no);
     }
+
+
+
+    public function link_part_revision(Request $request)
+    {
+        $parts = $request->chbparts;
+        $revision_id = $request->revision_id;
+        LinkedParts::where('revision_id', $request->revision_id)->delete();
+
+        foreach($parts as $part)
+        {
+            $data = new LinkedParts();
+            $data->revision_id = $revision_id;
+            $data->part_id = $part;
+            $data->save();
+        }
+        
+        return Redirect::to('/revision/'.$request->revision_id);
+    }
+
+
 
 
     public function ticket_delete_parts(Request $request)

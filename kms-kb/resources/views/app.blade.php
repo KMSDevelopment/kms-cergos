@@ -343,6 +343,45 @@
 
                 });
 
+
+
+                $('body').on('click', '.btnlinktickets', function() {
+
+                    var id = $(this).attr('id');
+                    $('.revision_id').val(id);
+                    $('.mdl-link-revisions-tickets').modal('toggle');
+
+                    $.ajax({
+                        url: '/tickets/all', // The URL to which the request is sent
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                        data: { id: id }, // Data to be sent to the server
+                        success: function(response) {
+                            // Code to execute if the request succeeds
+                            if(response.count == 0)
+                            {
+                                alert("Geen tickets gevonden");   
+                            }
+                            else
+                            {
+                                $("#tbody_tickets").empty();
+                                $.each(response.tickets, function (i, ticket) {
+                                    $('.tickets_table > tbody:last-child').append('<tr class="chbmodel_'+ticket.id+'"><td><input type="checkbox" class="chbtickets"  name="chbtickets[]" value="'+ticket.id+'"></td><td>'+ticket.ticket_no+'</td></tr>');
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Code to execute if the request fails
+                            console.log('Error:', error);
+                        }
+                    });
+
+                });
+
+
                 $('body').on('click', '.btn-link-modellen-revisions', function() {
 
                     var id = $(this).attr('id');
@@ -401,11 +440,11 @@
                                 $.each(response.modellen, function (i, modellen) {
                                     if(response.custom.indexOf(modellen.id) ==! -1)
                                     {
-                                        $('.modellen_table > tbody:last-child').append('<tr class="chbmodellen_'+modellen.id+' allmodels brand'+modellen.brand.id+'"><td><input type="checkbox" class="chbmodellen"  name="chbmodellen" value="'+modellen.id+' brand'+modellen.brand.brand+'" checked></td><td>'+modellen.brand.brand+ ' - ' +modellen.model+'</td></tr>');
+                                        $('.modellen_table > tbody:last-child').append('<tr class="chbmodellen_'+modellen.id+' allmodels brand'+modellen.brand.id+'"><td><input type="checkbox" class="chbmodellen"  name="chbmodellen[]" value="'+modellen.id+' brand'+modellen.brand.brand+'" checked></td><td>'+modellen.brand.brand+ ' - ' +modellen.model+'</td></tr>');
                                     }
                                     else
                                     {
-                                        $('.modellen_table > tbody:last-child').append('<tr class="chbmodellen_'+modellen.id+' allmodels brand'+modellen.brand.id+'"><td><input type="checkbox" class="chbmodellen"  name="chbmodellen" value="'+modellen.id+'"></td><td>'+modellen.brand.brand+ ' - ' +modellen.model+'</td></tr>');
+                                        $('.modellen_table > tbody:last-child').append('<tr class="chbmodellen_'+modellen.id+' allmodels brand'+modellen.brand.id+'"><td><input type="checkbox" class="chbmodellen"  name="chbmodellen[]" value="'+modellen.id+'"></td><td>'+modellen.brand.brand+ ' - ' +modellen.model+'</td></tr>');
                                     }
                                 });
                             }
@@ -469,9 +508,36 @@
 
 
 
+                
 
+                $('body').on('click', '.btnlinkmodellenrevision', function() {
 
+                    var id = $('.revision_id').val();
 
+                    $('.chbmodellen').each(function () {
+                        if (this.checked) {
+                            count = count + 1;
+                            var value = $(this).val();
+                            $.ajax({
+                                url: '/revision/modellen/link', // The URL to which the request is sent
+                                dataType: "json",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                                data: { model_id: value, revision_id:id }, // Data to be sent to the server
+                                success: function(response) {
+                                    // Code to execute if the request succeeds
+                                },
+                                error: function(xhr, status, error) {
+                                    // Code to execute if the request fails
+                                    console.log('Error:', error);
+                                }
+                            });
+                        }
+                    });
+                    location.reload();
+                });
 
 
 
@@ -1152,6 +1218,33 @@
 
                 });
 
+
+
+
+
+
+                
+                $('body').on('click', '.btnnewmanual', function() {
+                    $('.mdl-manual-add').modal('hide');
+                    $( ".revision_id_manual" ).val($(this).attr('id'));
+                    
+                    $( ".kms-new-tab-right" ).fadeIn('fast');
+                    $( ".kms-new-tab-left" ).fadeIn('fast');
+                    $( ".kms-new-tab-right" ).animate({
+                        width: "50%"
+                    }, 300, function() {
+                        $( ".new_manual" ).fadeIn('slow');
+
+                        $( ".kms-new-tab-left" ).animate({
+                            width: "50%"
+                        }, 300, function() {
+                            $( ".new_manual" ).fadeIn('slow');
+                            $( ".manual_pictures" ).fadeIn('slow');
+                        });
+
+                    });
+                });
+
                 $('body').on('click', '.btnchoosemenu', function() {
 
                     var choice = $('.menuchoice:checked').val();
@@ -1161,16 +1254,30 @@
                     }
                     if(choice == "new_manual")
                     {
-                        $('.mdl-manual-add').modal('hide');
                         $( ".kms-new-tab-right" ).fadeIn('fast');
+                        $( ".kms-new-tab-left" ).fadeIn('fast');
                         $( ".kms-new-tab-right" ).animate({
                             width: "50%"
                         }, 300, function() {
-                            $( "."+choice ).fadeIn('slow');
+                            $( ".new_manual" ).fadeIn('slow');
+
+                            $( ".kms-new-tab-left" ).animate({
+                                width: "50%"
+                            }, 300, function() {
+                                $( ".new_manual" ).fadeIn('slow');
+                                $( ".manual_pictures" ).fadeIn('slow');
+                            });
+
                         });
                     }
                 });
                 
+
+
+
+
+
+
                 $('body').on('click', '.btn_close_tab', function() {
                     
                     $( ".kms-tab-content" ).fadeOut('fast');
@@ -1955,7 +2062,39 @@
                 });
 
 
+                $('body').on('click', '.btn-link-product-revision', function() {
+                    $('.mdl-ticket-revision').modal('toggle');
+                    var revision_id = $(this).attr('id');
+                    $('.revision_id').val(revision_id);
+                    $.ajax({
+                        url: '/ticket/parts/read', // The URL to which the request is sent
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                        data: {}, // Data to be sent to the server
+                        success: function(response) {
+                            // Code to execute if the request succeeds
+                            if(response.count == 0)
+                            {
+                                alert("Geen tickets gevonden");   
+                            }
+                            else
+                            {           
+                                $('.table-body-part-ticket-link').empty();
 
+                                $.each(response.parts, function (i, part) {
+                                    $('.table-part-ticket-link > tbody:last-child').append('<tr class="chbparts"><td><input type="checkbox" class="chbparts"  name="chbparts[]" value="'+part.id+'"></td><td>'+part.name+'<br/> <em style="font-size:11px;">Onderdeel nr: '+part.code+'</em></td></tr>');
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Code to execute if the request fails
+                            console.log('Error:', error);
+                        }
+                    });
+                });
 
 
 
@@ -2188,12 +2327,15 @@
         </div>
 
         <div class="kms-new-tab-right" style="overflow-y:scroll; overflow-x:hidden;">
+
+
             <div class="kms-tab-content new_manual">
                 <h2 class="kms-column-subtitle" style="color:#FFF;">Nieuwe handleiding maken</h2>
                 <hr>
                 <label for="titel" style="color:#FFF;">Titel</label>
                 <input type="text" name="manual_title" class="form form-control manual_title" id="titel" placeholder="tellerpaneel reparatie" required>
                 <input type="hidden" name="ticket_no" class="ticket_no_manual">
+                <input type="hidden" name="revision_id" class="revision_id_manual">
                 <textarea name="manual" class="editor" style="margin-top:5px;"></textarea>
                 <a href="#" class="btn_close_tab" style="float: right; margin-top: 20px; font-size: 17px; color: #FFF;"><i class='bx bx-right-arrow-alt' ></i> Inklappen</a>
                 <button type="button" class="btn btn-warning btn-kms-warning btn-save-manual" style="float:left; margin-top:10px;"><i class="bx bx-plus"></i> Opslaan</button>
@@ -2253,8 +2395,14 @@
         </div>
         
         <div class="kms-new-tab-left">
-            <div class="kms-tab-content new_part">
-                
+            <div class="kms-tab-content manual_pictures" style="display:none;">
+                <h3 class="kms-column-subtitle" style="font-weight: normal; color:#FFF;">Media </h3>
+                <hr style="border-color:#FFF;">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4"></div>
+                </div>
             </div>
         </div>
 
@@ -2570,6 +2718,14 @@
         </div>
 
 
+        
+
+
+
+
+        
+
+
 
         <div class="modal fade mdl-ticket-product" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog kms-modal" role="document">
@@ -2603,7 +2759,10 @@
 
 
 
-        <div class="modal fade mdl-ticket-product" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+        
+        <div class="modal fade mdl-revision-product" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog kms-modal" role="document">
                 <div class="modal-content" style="overflow:hidden;">
                     <div class="modal-header kms-modal-header kms-column-subtitle">
@@ -2612,7 +2771,7 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/ticket/part/link" method="POST">
+                    <form action="/revision/part/link" method="POST">
                     @csrf
                     <input type="hidden" name="ticket_no" class="ticket_no">
                     <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
@@ -2627,6 +2786,40 @@
                     </div>
                     <div class="modal-footer kms-modal-footer">
                         <button type="submit" class="btn btn-warning" style="width:100%;"><i class='bx bx-link' ></i> Onderdelen linken</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="modal fade mdl-ticket-revision" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Onderdelen linken</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/revision/part/link" method="POST">
+                    @csrf
+                    <input type="hidden" name="revision_id" class="revision_id">
+                    <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                        <table class="table table-dark table-part-ticket-link">
+                            <tbody class="table-body-part-ticket-link">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer kms-modal-footer">
+                        <button type="submit" class="btn btn-warning" style="width:100%;"><i class='bx bx-link' ></i> Onderdelen linken</button>
+                        <em style="width:100%; text-align:center; font-size:13px; margin-top:10px;">* Let op de onderdelen die je kiest zullen de onderdelen die al gelinked staan overschrijven.</em>
                     </div>
                     </form>
                 </div>
@@ -3106,8 +3299,34 @@
 
 
 
+        <div class="modal fade mdl-link-revisions-tickets" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Link Tickets </h5>
+                        <button type="button" class="close closemdl" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/revision/models/link" method="POST">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 300px; overflow-y:scroll; overflow-x:hidden;">
+                            <table class="tickets_table table table-dark">
+                                <tbody id="tbody_tickets">
+                                    <tr><td></td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer kms-modal-footer row">
+                            <input type="hidden" name="revision_id" class="revision_id">
+                            <button type="submit" class="btn btn-warning btn-kms-warning btnlinkmodellenrevision" style="width:100%;"><i class="bx bx-user" style="margin-top:4px;"></i> link</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-
+        
 
 
         <div class="modal fade mdl-link-modellen-revisions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -3119,7 +3338,7 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <table class="table table-dark">
+                    <table class="table table-dark" style="margin-bottom:0px;">
                         <tbody>
                             <tr>
                                 <td style="color:#FFF;">Filter op merk</td>
@@ -3131,17 +3350,22 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="modal-body kms-modal-body" style="max-height: 300px; overflow-y:scroll; overflow-x:hidden;">
-                        <table class="modellen_table table table-dark">
-                            <tbody id="tbody_modellen">
-                                <tr><td></td><td></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer kms-modal-footer row">
-                        <input type="hidden" name="revision_id" class="revision_id">
-                        <button type="button" class="btn btn-warning btn-kms-warning btnlinkmodellenrevision" style="width:100%;"><i class="bx bx-user" style="margin-top:4px;"></i> link</button>
-                    </div>
+                    <form action="/revision/models/link" method="POST">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 300px; overflow-y:scroll; overflow-x:hidden;">
+                            <table class="modellen_table table table-dark">
+                                <tbody id="tbody_modellen">
+                                    <tr><td></td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer kms-modal-footer row">
+                            <input type="hidden" name="revision_id" class="revision_id">
+                            <button type="submit" class="btn btn-warning btn-kms-warning btnlinkmodellenrevision" style="width:100%;"><i class="bx bx-user" style="margin-top:4px;"></i> link</button>
+
+                            <em style="width:100%; text-align:center; font-size:13px; margin-top:10px;">* Let op de modellen die je kiest zullen de moddellen die al gelinked staan overschrijven</em>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
