@@ -1229,18 +1229,11 @@
                     $( ".revision_id_manual" ).val($(this).attr('id'));
                     
                     $( ".kms-new-tab-right" ).fadeIn('fast');
-                    $( ".kms-new-tab-left" ).fadeIn('fast');
                     $( ".kms-new-tab-right" ).animate({
                         width: "50%"
                     }, 300, function() {
                         $( ".new_manual" ).fadeIn('slow');
 
-                        $( ".kms-new-tab-left" ).animate({
-                            width: "50%"
-                        }, 300, function() {
-                            $( ".new_manual" ).fadeIn('slow');
-                            $( ".manual_pictures" ).fadeIn('slow');
-                        });
 
                     });
                 });
@@ -1255,18 +1248,11 @@
                     if(choice == "new_manual")
                     {
                         $( ".kms-new-tab-right" ).fadeIn('fast');
-                        $( ".kms-new-tab-left" ).fadeIn('fast');
                         $( ".kms-new-tab-right" ).animate({
                             width: "50%"
                         }, 300, function() {
                             $( ".new_manual" ).fadeIn('slow');
 
-                            $( ".kms-new-tab-left" ).animate({
-                                width: "50%"
-                            }, 300, function() {
-                                $( ".new_manual" ).fadeIn('slow');
-                                $( ".manual_pictures" ).fadeIn('slow');
-                            });
 
                         });
                     }
@@ -1297,6 +1283,15 @@
 
                 $('body').on('click', '.btn-save-manual', function() {
                     var ticket_no = $('.ticket_no_manual').val();
+                    if(ticket_no == "")
+                    {
+                        ticket_no = null;   
+                    }
+                    var revision_id = $('.revision_id_manual').val();
+                    if(revision_id == "")
+                    {
+                        revision_id = null;   
+                    }
                     var title = $('.manual_title').val();
                     var text = $('.richText-editor').html();
                     $.ajax({
@@ -1306,11 +1301,17 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
-                        data: { ticket_no: ticket_no, title:title, text:text }, // Data to be sent to the server
+                        data: { ticket_no: ticket_no, title:title, text:text, revision_id:revision_id }, // Data to be sent to the server
                         success: function(response) {
-                            // Code to execute if the request succeeds
-                            $(".manuals").append("<div class='kms-body-column col-md-6 col-sm-12 col-lg-3 bg-gray-800 text-white kms-column-border text-center'><a href='/manual/"+response.id+"'><h3 class='kms-column-subtitle' style='font-weight: normal; font-size: 16px;'>"+response.title+"</h3><hr><i class='bx bxs-file text-danger' style='font-size:72px;'></a></div>");
-
+                            if(revision_id >0)
+                            {
+                                location.reload();
+                            }
+                            else
+                            {
+                                // Code to execute if the request succeeds
+                                $(".manuals").append("<div class='kms-body-column col-md-6 col-sm-12 col-lg-3 bg-gray-800 text-white kms-column-border text-center'><a href='/manual/"+response.id+"'><h3 class='kms-column-subtitle' style='font-weight: normal; font-size: 16px;'>"+response.title+"</h3><hr><i class='bx bxs-file text-danger' style='font-size:72px;'></a></div>");
+                            }
                             $( ".kms-tab-content" ).fadeOut('fast');
 
                             $( ".kms-new-tab-left" ).animate({
@@ -1335,13 +1336,22 @@
 
                 $('body').on('click', '.btnloadmanual', function() {
                     var id = $(this).attr('id');
+                    var revid = $(this).attr('alt');
                     $('.manual_id').val(id);
+                    $('.revision_id').val(revid);
                     $('.mdl-manual-add').modal('hide');
                     $( ".kms-new-tab-right" ).fadeIn('fast');
                     $( ".kms-new-tab-right" ).animate({
                         width: "50%"
                     }, 300, function() {
+
                         $('.update_manual').fadeIn("slow");
+                        $( ".kms-new-tab-left" ).fadeIn('fast');
+                        $( ".kms-new-tab-left" ).animate({
+                            width: "50%"
+                        }, 300, function() {
+                            $( ".manual_pictures" ).fadeIn('slow');
+                        });
                         
                         $.ajax({
                             url: '/ticket/manual/read', // The URL to which the request is sent
@@ -1361,6 +1371,38 @@
                                 console.log('Error:', error);
                             }
                         });
+
+                        $('.allmedia').empty();
+                        $.ajax({
+                            url: '/manual/media/load', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: id }, // Data to be sent to the server
+                            success: function(response) {
+                                console.log(response);
+                                
+                                $.each(response.media, function (i, file) {
+                                    if(file.extension == 'mp4')
+                                    {
+                                        $('.allmedia').append("<div class='col-lg-4 col-sm-12 col-md-12'><video style='width:100%; height:auto;' controls><source src='"+file.file_link+"' type='video/mp4'>Your browser does not support the video tag.</video></div>");
+                                    }
+                                    else
+                                    {
+                                        $('.allmedia').append("<div class='col-lg-4 col-sm-12 col-md-12'><img src='"+file.file_link+"' style='width:100%;'></div>");
+                                    }
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+
+
                     });
                 });
 
@@ -1809,6 +1851,10 @@
                     $('.mdl-new-parts').modal('toggle');
                 });
                 
+                
+                $('body').on('click', '.btn-add-manual-media', function() {
+                    $('.mdl-add-media').modal('toggle');
+                });
                 
                 $('body').on('click', '.checkrevision', function() {
                     var check = $(this).val();
@@ -2294,10 +2340,84 @@
 
                 if(window.location.hash) {
                     var hash = window.location.hash;
+
+                    
+                    let hashArray = hash.split("-");
+                    var manualid = hashArray[1];
+
                     $('.kms-preloader').delay(400).fadeOut("slow");
-                    $('body').animate({
-                        scrollTop: $("#".hash).offset().top
-                    }, 300);
+                    if(hashArray[0] == "#uploaded")
+                    {
+                        $( ".kms-new-tab-right" ).fadeIn('fast');
+                        $( ".kms-new-tab-right" ).animate({
+                            width: "50%"
+                        }, 300, function() {
+
+                            $('.update_manual').fadeIn("slow");
+                            $( ".kms-new-tab-left" ).fadeIn('fast');
+                            $( ".kms-new-tab-left" ).animate({
+                                width: "50%"
+                            }, 300, function() {
+                                $( ".manual_pictures" ).fadeIn('slow');
+                            });
+                        });
+
+
+                        $.ajax({
+                            url: '/ticket/manual/read', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: manualid }, // Data to be sent to the server
+                            success: function(response) {
+                                console.log(response);
+                                $('.manual_title2').val(response.manual.title);
+                                $('.richText-editor').html(response.manual.text);
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+                        $('.allmedia').empty();
+                        $.ajax({
+                            url: '/manual/media/load', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: manualid }, // Data to be sent to the server
+                            success: function(response) {
+                                console.log(response);
+                                
+                                $.each(response.media, function (i, file) {
+                                    if(file.extension == 'mp4')
+                                    {
+                                        $('.allmedia').append("<div class='col-lg-4 col-sm-12 col-md-12'><video style='width:100%; height:auto;' controls><source src='"+file.file_link+"' type='video/mp4'>Your browser does not support the video tag.</video></div>");
+                                    }
+                                    else
+                                    {
+                                        $('.allmedia').append("<div class='col-lg-4 col-sm-12 col-md-12'><img src='"+file.file_link+"' style='width:100%;'></div>");
+                                    }
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        $('body').animate({
+                            scrollTop: $(hash).offset().top
+                        }, 300);
+                    }
                 }
 
 
@@ -2327,19 +2447,6 @@
         </div>
 
         <div class="kms-new-tab-right" style="overflow-y:scroll; overflow-x:hidden;">
-
-
-            <div class="kms-tab-content new_manual">
-                <h2 class="kms-column-subtitle" style="color:#FFF;">Nieuwe handleiding maken</h2>
-                <hr>
-                <label for="titel" style="color:#FFF;">Titel</label>
-                <input type="text" name="manual_title" class="form form-control manual_title" id="titel" placeholder="tellerpaneel reparatie" required>
-                <input type="hidden" name="ticket_no" class="ticket_no_manual">
-                <input type="hidden" name="revision_id" class="revision_id_manual">
-                <textarea name="manual" class="editor" style="margin-top:5px;"></textarea>
-                <a href="#" class="btn_close_tab" style="float: right; margin-top: 20px; font-size: 17px; color: #FFF;"><i class='bx bx-right-arrow-alt' ></i> Inklappen</a>
-                <button type="button" class="btn btn-warning btn-kms-warning btn-save-manual" style="float:left; margin-top:10px;"><i class="bx bx-plus"></i> Opslaan</button>
-            </div>
             
             <div class="kms-tab-content update_manual">
                 <h2 class="kms-column-subtitle" style="color:#FFF;">Handleiding</h2>
@@ -2392,16 +2499,43 @@
                     </tbody>
                 </table>
             </div>
+            <div class="kms-tab-content new_manual">
+                <h2 class="kms-column-subtitle" style="color:#FFF;">Nieuwe handleiding maken</h2>
+                <hr>
+                <label for="titel" style="color:#FFF;">Titel</label>
+                <input type="text" name="manual_title" class="form form-control manual_title" id="titel" placeholder="tellerpaneel reparatie" required>
+                <input type="hidden" name="ticket_no" class="ticket_no_manual">
+                <input type="hidden" name="revision_id" class="revision_id_manual">
+                <textarea name="manual" class="editor" style="margin-top:5px;"></textarea>
+                <a href="#" class="btn_close_tab" style="float: right; margin-top: 20px; font-size: 17px; color: #FFF;"><i class='bx bx-right-arrow-alt' ></i> Inklappen</a>
+                <button type="button" class="btn btn-warning btn-kms-warning btn-save-manual" style="float:left; margin-top:10px;"><i class="bx bx-plus"></i> Opslaan</button>
+            </div>
         </div>
         
         <div class="kms-new-tab-left">
             <div class="kms-tab-content manual_pictures" style="display:none;">
                 <h3 class="kms-column-subtitle" style="font-weight: normal; color:#FFF;">Media </h3>
                 <hr style="border-color:#FFF;">
-                <div class="row">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-4"></div>
+                
+                <a href="#" class="btn-add-manual-media"><div class="col-lg-12" style="background: #343b43;
+                height: 100px;
+                border-style: dashed;
+                border-color: red;
+                border-width: 2px;
+                border-radius: 5px;
+                opacity: 0.5;
+                box-shadow: 0px 0px 22px #a75a56;">
+                    <table style="width:100%; height:100%;">
+                        <tr>
+                            <td style="width:100%; height:100%; text-align:center; vertical-align:middle;">
+                                <i class="fa fa-plus" style="font-size:86px; color:red;"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div></a>
+                <div class="allmedia row">
+
+
                 </div>
             </div>
         </div>
@@ -2414,6 +2548,33 @@
         <div class="kms-btn-rnd-dark nextresult" style="display:none; position:fixed; z-index:999999999; bottom:25px; left:48%;"><table style="height: 100%; width: 100%; position: relative;"><tr><td style="width: 100%; height: 100%; text-align: center; vertical-align: middle; "><span style='font-size:11px; color:#FFF;'>meer</span></td></tr></table></div>
 
 
+
+        
+
+        <div class="modal fade mdl-add-media" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Media uploaden</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/manual/media/add" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                            <input type="hidden" name="revision_id" class="revision_id">
+                            <input type="hidden" name="manual_id" class="manual_id">
+                            <label style="color:#FFF;">Upload een video of afbeelding</label>
+                            <input type="file" name="mediafile" class="form form-control" accept=".gif,.jpg,.jpeg,.png,.mp4,.webp" required>
+                        </div>
+                        <div class="modal-footer kms-modal-footer">
+                            <button class="btn btn-warning" type="submit"><i class="bx bx-upload"></i> uploaden</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
 

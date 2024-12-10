@@ -121,6 +121,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/ticket/part/delete', [RevisionsController::class, 'ticket_delete_parts'])->name('ticket.link.delete');
     Route::post('/ticket/manual/delete', [RevisionsController::class, 'ticket_manual_delete'])->name('ticket.manual.delete');
     Route::post('/ticket/manual/create', [RevisionsController::class, 'ticket_manual_create'])->name('ticket.manual.create');
+    Route::post('/manual/media/load', [RevisionsController::class, 'manual_media_load'])->name('manual.media.load');
+    
+    Route::post('/manual/media/add', [RevisionsController::class, 'manual_media_add'])->name('media.manual.add');
+    
     Route::get('/ticket/manual/update', [RevisionsController::class, 'ticket_manual_update'])->name('ticket.manual.update');
     Route::get('/ticket/manual/update/title', [RevisionsController::class, 'ticket_manual_update_title'])->name('ticket.manual.update.title');
     Route::post('/ticket/customers/read', [RevisionsController::class, 'ticket_customers_read'])->name('ticket.customers.read');
@@ -130,7 +134,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/tickets/all', [RevisionsController::class, 'tickets_all'])->name('tickets.all');
 
     Route::post('/revision/checked', [RevisionsController::class, 'revision_check'])->name('revision.check');
-
     
     Route::get('/customer/{id}', [CustomerController::class, 'view_customer'])->name('customers.view');
     Route::post('/customers/read', [CustomerController::class, 'read_customers'])->name('customers.read');

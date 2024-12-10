@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\CustomerRevisions;
 use App\Models\LinkedParts;
 use App\Models\Manuals;
+use App\Models\Media;
 use App\Models\RevisionModels;
 use App\Models\RevisionParts;
 use App\Models\User;
@@ -916,19 +917,33 @@ class RevisionsController extends Controller
 
     public function ticket_manual_create(Request $request)
     {
-        $ticket_no = $request->ticket_no;
+        
+        $revision_id = $request->revision_id;
         $title = $request->title;
         $text = $request->text;
-        $revisions_customers = CustomerRevisions::where('ticket_no',$ticket_no)->first();
-        $revision_id = $revisions_customers->revision_id;
+
+        if($revision_id == "")
+        {
+            $ticket_no = $request->ticket_no;
+            $revisions_customers = CustomerRevisions::where('ticket_no',$ticket_no)->first();
+            $revision_id = $revisions_customers->revision_id;
         
-        
-        $data = new Manuals();
-        $data->user_id = Auth::id();
-        $data->revision_id = $revision_id;
-        $data->ticket_no = $ticket_no;
-        $data->title = $title;
-        $data->text = $text;
+            $data = new Manuals();
+            $data->user_id = Auth::id();
+            $data->revision_id = $revision_id;
+            $data->ticket_no = $ticket_no;
+            $data->title = $title;
+            $data->text = $text;
+        }    
+        else
+        {
+            $data = new Manuals();
+            $data->user_id = Auth::id();
+            $data->revision_id = $revision_id;
+            $data->ticket_no = NULL;
+            $data->title = $title;
+            $data->text = $text;
+        }
 
         $data->save();
         $id = $data->id;
@@ -1096,4 +1111,28 @@ class RevisionsController extends Controller
         return Redirect::to('/rkb/parts');
     }
 
+    public function manual_media_add(Request $request)
+    {
+        $revision_id = $request->revision_id;
+        $manual_id = $request->manual_id;
+        $extension = $request->file('mediafile')->extension();
+        $imageName = time().'.'.$request->file('mediafile')->extension();
+        $request->file('mediafile')->move(public_path('images'), $imageName);
+        $link = "/images/$imageName";
+
+        $data = new Media();
+        $data->manual_id = $manual_id;
+        $data->file_name = $imageName;
+        $data->file_link = $link;
+        $data->extension = $extension;
+        $data->save();
+        return Redirect::to('/revision/'.$revision_id.'#uploaded-'.$manual_id);
+    }
+
+
+    public function manual_media_load(Request $request)
+    {
+        $media = Media::where('manual_id',$request->id)->get();
+        return response()->json(['media' => $media]);
+    }
 }

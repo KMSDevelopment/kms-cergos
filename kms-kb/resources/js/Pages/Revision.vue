@@ -73,6 +73,7 @@ async function updateComplainDesc(e) {
                     <div class="kms-breadcrumb-column col-md-6 col-sm-12 col-lg-12"><h2 class="kms-h2 text-xl font-semibold leading-tight text-gray-800"><img style="height: 100px; top: 0px; position: absolute; right: 10%;"><a href="/rkb" class="breadcrumb_li" style="float: left;">Reparaties <i class="bx bx-chevron-right"></i></a> <a class="breadcrumb_li" href="/rkb/cars#57" style="float: left;">{{ revision.title }}</a> </h2></div>
                 </div>
             </div>
+            <input type="hidden" name="revid" class="reviid" :value="revision.id">
         </section>
 
         <div style="background: #1f2937;">
@@ -154,15 +155,14 @@ async function updateComplainDesc(e) {
                         <hr>
                         <table class="table table-dark table-hover">
                             <thead>
-                                <th><input type="checkbox" class="kms-checkboxes customerchbs"></th>
                                 <th>Titel</th>
                                 <th>Laatsts bewerkt</th>
                             </thead>
                             <tbody>
                                 <tr v-for="manual in manuals">
-                                    <td><input type="checkbox" class="kms-checkboxes customerchbs" :value="manual.id"></td>
                                     <td>{{ manual.title }}</td>
                                     <td>{{ manual.updated_at }}</td>
+                                    <td><a href="#" class="btnloadmanual btn btn-warning" :alt="revision.id" :id="manual.id"><i class='bx bx-book-reader' ></i></a></td>
                                 </tr>
                             </tbody>    
                             <tfoot>
