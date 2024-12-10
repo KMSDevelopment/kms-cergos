@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div class="flex min-h-screen flex-col items-center bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 pt-6 sm:justify-center sm:pt-0" style="background:#000;">
+    <div class="flex min-h-screen flex-col items-center bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 pt-6 sm:justify-center sm:pt-0">
         <div>
             <Link href="/">
                 <img src="/images/logo/logo_cockpit.png" style="width:285px;">

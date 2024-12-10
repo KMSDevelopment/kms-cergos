@@ -85,7 +85,7 @@ async function updateProductName(e) {
             <div class="menubar">
                 <table class="menubar-table">
                     <tr>
-                        <td class="menubar-button btn-new-parts">
+                        <td class="menubar-button btn-new-customers">
                             Nieuw
                         </td>
                         <td class="menubar-button btn-import-customers">

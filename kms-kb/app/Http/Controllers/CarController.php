@@ -7,7 +7,6 @@ use App\Models\BrandModels;
 use App\Models\ModelTypes;
 use App\Models\ModelTypeVariants;
 use App\Models\RevisionModels;
-use App\Models\RevisionParts;
 use App\Models\Revisions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -172,19 +171,6 @@ class CarController extends Controller
             'revision_id' => $request->ticket,
             'model_id' => $request->models
         ]);
-        return Redirect::to('/rkb/cars/sort/alfabetisch#'.strtolower($request->brandname));
-    }
-
-
-    public function part_create(Request $request)
-    {
-        $data = new RevisionParts();
-        $data->title = $request->title;
-        $data->title = $request->title;
-        $data->complain_desc = $request->complains;
-        $data->revision_desc = $request->description;
-
-        $data->save();
         return Redirect::to('/rkb/cars/sort/alfabetisch#'.strtolower($request->brandname));
     }
 
