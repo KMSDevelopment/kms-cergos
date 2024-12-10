@@ -5,9 +5,6 @@ import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     customers: Array,
-    apis: Array,
-    api_name: Array,
-    api_ids: Array,
     page: String,
     next_page: String,
     prev_page: String,
@@ -145,8 +142,8 @@ async function updateCity(e) {
                         <h3 class="kms-column-subtitle" style="font-size:17px;"><input type="checkbox" style="float:left; margin-top:3px; margin-right:15px;" class="kms-checkboxes checkbox_checkall"><i class='bx bx-label kms-icons-sm-lbl' style="margin-top:0px;"></i> 
                             Klantenbestand 
                             <a href="/rkb/customers/1" class="btn btn-danger" title="Bekijk particuliere klanten" style="float:right; margin-right:15px; margin-top:-10px;"><i class="bx bx-user"></i></a>
-                            <a href="/rkb/companies/1" class="btn btn-danger" title="Bekijk zakelijke klanten" style="float:right; margin-right:15px; margin-top:-10px;"><i class='bx bxs-business'></i></a>
-                            <span class="alert alert-warning" style="font-size:10px; padding:5px; top:-3px; margin-right:15px; background:none; color:#FFF; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; float:right;">Aantal particuliere klanten: {{ total_customers }}</span>
+                            <a href="/rkb/customers/1" class="btn btn-danger" title="Bekijk zakelijke klanten" style="float:right; margin-right:15px; margin-top:-10px;"><i class='bx bxs-business'></i></a>
+                            <span class="alert alert-warning" style="font-size:10px; padding:5px; top:-3px; margin-right:15px; background:none; color:#FFF; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; float:right;">Aantal zakelijke klanten: {{ total_customers }}</span>
                         </h3>
                         <hr style="margin-top:20px;">
                         <br/>
@@ -154,30 +151,21 @@ async function updateCity(e) {
                             <div class="col-12">
                                 <table class="table table-hover table-dark">
                                     <thead style="border-bottom: 5px solid rgb(52 52 52); line-height: 38px;">
-                                        <th></th>
-                                        <th></th>
                                         <th>Referentie</th>
-                                        <th style="padding-left:15px;">Voor -en achternaam</th>
+                                        <th style="padding-left:15px;">Bedrijfsnaam</th>
                                         <th style="padding-left:15px;">Straatnaam</th>
                                         <th style="padding-left:15px;">Postcode</th>
-                                        <th style="padding-left:15px;">Woonplaats</th>
+                                        <th style="padding-left:15px;">Vestigingsplaats</th>
                                         <th>Contact</th>
                                         <th></th>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="customer in customers" :class="'allcsm api'+api_ids[customer.id] + ' customer'+customer.id">
-                                            <td :class="'api'+api_ids[customer.id]">
-                                                <input type="checkbox" class="kms-checkboxes customerchbs" :value="customer.id"> 
-                                            </td>
-                                            <td>
-                                                <span class="alert alert-danger" style=" font-size: 10px; padding: 5px; background-color: transparent; color: #FFF;">{{ api_name[customer.id] }}</span>
-                                            </Td>
+                                        <tr v-for="customer in customers" :class="'allcsm customer'+customer.id">
                                             <td style="text-decoration: underline;">
                                                 <a :href="'/customer/'+customer.id"><i class="bx bx-user text-danger"></i> {{ customer.reference }}</a>
                                             </td>
                                             <td>
-                                                <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.firstname" @keydown="updateFirstname($event)" @keyup="updateFirstname($event)" @change="updateFirstname($event)" :id="customer.id">
-                                                <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.lastname" @keydown="updateLastname($event)" @keyup="updateLastname($event)" @change="updateLastname($event)" :id="customer.id">
+                                                <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.company_name" @keydown="updateFirstname($event)" @keyup="updateFirstname($event)" @change="updateFirstname($event)" :id="customer.id">
                                             </td>
                                             <td>
                                                 <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.address" @keydown="updateAddress($event)" @keyup="updateAddress($event)" @change="updateAddress($event)" :id="customer.id">

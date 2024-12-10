@@ -13,6 +13,58 @@ use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
+
+    public function create_customer(Request $request)
+    {
+        $data = new Customers();
+        $data->reference = $request->referentie;
+        $data->firstname = $request->firstname;
+        $data->middlename = $request->middlename;
+        $data->lastname = $request->lastname;
+        $data->email = $request->email;
+        $data->phonenr = $request->phonenr;
+        $data->gender = $request->gender;
+        $data->birthdate = $request->birtdate;
+
+        $data->address = $request->street;
+        $data->housenr = $request->housenr;
+        $data->zipcode = $request->zipcode;
+        $data->city = $request->city;
+        $data->country = $request->country;
+        
+        $data->brand_id = $request->brand_id;
+        $data->comp_id = $request->company_id;
+
+        $data->save();
+        return Redirect::to('/rkb/customers/1');
+    }
+
+
+    public function create_company(Request $request)
+    {
+        $data = new Company();
+        $data->vat = $request->vat;
+        $data->company_name = $request->company_name;
+        $data->email = $request->email;
+        $data->invoice_email = $request->invoice_email;
+        $data->phonenr = $request->phonenr;
+        $data->address = $request->street;
+        $data->housenr = $request->housenr;
+        $data->zipcode = $request->zipcode;
+        $data->city = $request->city;
+        $data->country = $request->country;
+        
+        $imageName = time().'.'.$request->file('logo')->extension();
+        $request->file('logo')->move(public_path('images'), $imageName);
+        $data->logo = '/images/'.$imageName;
+
+        $data->customer_id = $request->contact_person;
+
+        $data->save();
+        return Redirect::to('/rkb/customers/1');
+    }
+
+
     public function view_customer(Request $request)
     {
         $customer = Customers::find($request->id);
@@ -69,7 +121,17 @@ class CustomerController extends Controller
         return response()->json(['company' => $company]);
     }
 
+    public function all_companies(Request $request)
+    {
+        $companies = Company::all();
+        return response()->json(['companies' => $companies]);
+    }
 
+    public function all_customers(Request $request)
+    {
+        $customers = Customers::all();
+        return response()->json(['customers' => $customers]);
+    }
 
     public function unlink_customers_revision(Request $request)
     {

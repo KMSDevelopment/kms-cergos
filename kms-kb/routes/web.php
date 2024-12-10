@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rkb/cars/search', [RevisionsController::class, 'cars_search'])->name('rkb.cars.search.page');
 
     Route::get('/rkb/customers/{id}', [RevisionsController::class, 'customers'])->name('rkb.customers.overview');
+    Route::get('/rkb/companies/{id}', [RevisionsController::class, 'companies'])->name('rkb.companies.overview');
     Route::get('/rkb/revisions', [RevisionsController::class, 'revisions'])->name('rkb.revisions.overview');
     Route::get('/rkb/manuals', [RevisionsController::class, 'manuals'])->name('rkb.manuals.overview');
     Route::get('/rkb/parts', [RevisionsController::class, 'parts'])->name('rkb.manuals.parts');
@@ -126,6 +127,8 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/customer/{id}', [CustomerController::class, 'view_customer'])->name('customers.view');
     Route::post('/customers/read', [CustomerController::class, 'read_customers'])->name('customers.read');
+    Route::post('/customer/company/create', [CustomerController::class, 'create_company'])->name('customers.company.create');
+    Route::post('/customers/create', [CustomerController::class, 'create_customer'])->name('customers.create');
     Route::post('/car/customers/unlink', [CustomerController::class, 'unlink_customers'])->name('customers.unlink');
     Route::post('/car/customers/link', [CustomerController::class, 'link_customers'])->name('customers.link');
     Route::post('/revision/customers/read', [CustomerController::class, 'read_customers_revision'])->name('revision.customers.read');
@@ -151,7 +154,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/customer/company/read', [CustomerController::class, 'customer_company_read'])->name('customer.company.read');
     Route::post('/customer/company/link', [CustomerController::class, 'customer_company_link'])->name('customer.company.link');
-
+    Route::post('/companies/all', [CustomerController::class, 'all_companies'])->name('companies.all');
+    Route::post('/customers/all', [CustomerController::class, 'all_customers'])->name('customers.all');
     Route::post('/brands/all', [CarController::class, 'brands_all'])->name('brands.all');
 
     Route::post('/part/stock/edit', [RevisionsController::class, 'part_stock_edit'])->name('part.stock.edit');

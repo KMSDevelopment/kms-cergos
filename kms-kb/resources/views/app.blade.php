@@ -1044,12 +1044,120 @@
                     }
                 });
 
+                
+                $('body').on('click', '.btn_customer_choice', function() {
+                   
+                    $('.mdl-new-customers').modal('hide');
+                    var choice = $('.menuchoice_customers:checked').val();
+
+                    if(choice == "new_particulier")
+                    {
+                        $('.mdl-new-particulier').modal('show');
+
+                        $.ajax({
+                            url: '/companies/all', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: 1 }, // Data to be sent to the server
+                            success: function(response) {
+                                // Code to execute if the request succeeds
+                                if(response.count == 0)
+                                {
+                                    alert("Geen bedrijven gevonden");   
+                                }
+                                else
+                                {
+                                    $.each(response.companies, function (i, company) {
+                                        $('.company_select').append($('<option>', {
+                                            value: company.id,
+                                            text: company.company_name
+                                        }));
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+                        $.ajax({
+                            url: '/brands/all', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: 1 }, // Data to be sent to the server
+                            success: function(response) {
+                                // Code to execute if the request succeeds
+                                if(response.count == 0)
+                                {
+                                    alert("Geen merken gevonden");   
+                                }
+                                else
+                                {
+                                    $.each(response.brands, function (i, brands) {
+                                        $('.brand_select').append($('<option>', {
+                                            value: brands.id,
+                                            text: brands.brand
+                                        }));
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+                    }
+                    if(choice == "new_company")
+                    {
+                        $('.mdl-new-company').modal('show');
+
+                        $.ajax({
+                            url: '/customers/all', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: 1 }, // Data to be sent to the server
+                            success: function(response) {
+                                // Code to execute if the request succeeds
+                                if(response.count == 0)
+                                {
+                                    alert("Geen klanten gevonden");   
+                                }
+                                else
+                                {
+                                    $.each(response.customers, function (i, customer) {
+                                        $('.contact_persons').append($('<option>', {
+                                            value: customer.id,
+                                            text: customer.firstname + " " + customer.lastname
+                                        }));
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+                    }
+
+                });
+
                 $('body').on('click', '.btnchoosemenu', function() {
 
                     var choice = $('.menuchoice:checked').val();
                     if(choice == "new_part")
                     {
-
+                        $('.mdl-new-parts').modal('show');
                     }
                     if(choice == "new_manual")
                     {
@@ -2181,6 +2289,248 @@
         </div>
 
 
+        <div class="modal fade mdl-new-particulier" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Nieuwe particulier klant</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/customer/create" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 500px; overflow-y:scroll; overflow-x:hidden;">
+                        
+                            <label class="mt-2 mb-3" style="width:100%;">Referentie <em style="font-size:11px; float:right;">*optioneel</em></td></label>
+                            <input type="text" name="referentie" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: K-CMS-0001" required>
+
+                            <table class="table table-dark mt-2">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Voornaam</label></td>
+                                        <td><label class="mt-2">Middelnaam</label><em style="font-size:11px; float:right;">*optioneel</em></td>
+                                        <td><label class="mt-2">Achternaam</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="firstname" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Jan" required></td>
+                                        <td><input type="text" name="middlename" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: de" ></td>
+                                        <td><input type="text" name="lastname" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Man" required></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">E-mailadres</label></td>
+                                        <td><label class="mt-2">Telefoonnummer</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="email" name="email" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: jan.de.man@gmail.com" required></td>
+                                        <td><input type="text" name="phonenr" class="form form-control" style="background-color: #FFF; padding:7px;" required></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Geslacht</label><em style="font-size:11px; float:right;">*optioneel</em></td>
+                                        <td><label class="mt-2">Geboortedatum</label><em style="font-size:11px; float:right;">*optioneel</em></td>
+                                    </tr>
+                                    <tr>
+                                        <td><select type="text" name="gender" class="form form-control" style="background-color: #FFF; padding:7px;">
+                                            <option value="" disabled selected>Maak een keuze..</option>
+                                            <option>Man</option>
+                                            <option>Vrouw</option>
+                                            <option>Overig</option>
+                                        </select></td>
+                                        <td><input type="date" name="birtdate" class="form form-control" style="background-color: #FFF; padding:7px;" ></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Straatnaam</label></td>
+                                        <td><label class="mt-2">Huisnummer</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="street" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Jantjebroek" required></td>
+                                        <td><input type="text" name="housenr" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 1A" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label class="mt-2">Postcode</label></td>
+                                        <td><label class="mt-2">Woonplaats</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="zipcode" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 1234AB" required></td>
+                                        <td><input type="text" name="city" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Amsterdam" required></td>
+                                    </tr>
+                                    <tr>
+                                    <tr>
+                                        <td></td>
+                                        <td><label class="mt-2">Land</label></td>
+                                    </tr>
+                                    <td></td>
+                                        <td>
+                                            <select name="country" class="form form-control" style="background-color: #FFF; padding:7px;">
+                                                <option value="" disabled selected>Maak een keuze..</option>
+                                                <option>Nederland</option>
+                                                <option>Duitsland</option>
+                                                <option>Engeland</option>
+                                                <option>België</option>
+                                                <option>Luxemburg</option>
+                                                <option>China</option>
+                                                <option>Elders</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <label class="mt-2 mb-3" style="width:100%;">Automerk dat de klant rijd <em style="font-size:11px; float:right;">*optioneel</em></td></label>
+                            <select name="brand_id" class="form form-control brand_select" style="background-color: #FFF; padding:7px;" placeholder="vb: K-CMS-0001" required>
+                                    <option value="" disabled selected>Maak een keuze..</option>
+                            </select>
+
+                            <label class="mt-2 mb-3" style="width:100%;">Link aan een bedrijf <em style="font-size:11px; float:right;">*optioneel</em></td></label>
+                            <select name="company_id" class="form form-control company_select" style="background-color: #FFF; padding:7px;" placeholder="vb: K-CMS-0001" required>
+                                    <option value="" disabled selected>Maak een keuze..</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer kms-modal-footer row">
+                            <button type="submit" class="btn btn-warning btn-kms-warning btnlinkcustomers" style="width:98%;"><i class="bx bx-plus" style="margin-top:4px;"></i> Toevoegen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade mdl-new-company" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Nieuwe zakelijke klant</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/customer/company/create" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 500px; overflow-y:scroll; overflow-x:hidden;">
+                        
+
+                            <label class="mt-2 mb-3" style="width:100%;">Belastingnummer <em style="font-size:11px; float:right;">*optioneel</em></td></label>
+                            <input type="text" name="vat" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: K-CMS-0001" required>
+
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Logo</label><em style="font-size:11px; float:right;">*optioneel</em></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="file" name="logo" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Man" ></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Bedrijfsnaam</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="company_name" class="form form-control" style="background-color: #FFF; padding:7px;" required></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">E-mailadres</label></td>
+                                        <td><label class="mt-2">E-mail facturatie</label><em style="font-size:11px; float:right;">*optioneel</em></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="email" name="email" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: jan.de.man@gmail.com" required></td>
+                                        <td><input type="email" name="invoice_email" class="form form-control" style="background-color: #FFF; padding:7px;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Telefoonnummer</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="phonenr" class="form form-control" style="background-color: #FFF; padding:7px;" required></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><label class="mt-2">Straatnaam</label></td>
+                                        <td><label class="mt-2">Huisnummer</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="street" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Jantjebroek" required></td>
+                                        <td><input type="text" name="housenr" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 1A" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label class="mt-2">Postcode</label></td>
+                                        <td><label class="mt-2">Vestigingsplaats</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="zipcode" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 1234AB" required></td>
+                                        <td><input type="text" name="city" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Amsterdam" required></td>
+                                    </tr><tr>
+                                        <td></td>
+                                        <td><label class="mt-2">Land</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <select name="country" class="form form-control" style="background-color: #FFF; padding:7px;">
+                                                <option value="" disabled selected>Maak een keuze..</option>
+                                                <option>Nederland</option>
+                                                <option>Duitsland</option>
+                                                <option>Engeland</option>
+                                                <option>België</option>
+                                                <option>Luxemburg</option>
+                                                <option>China</option>
+                                                <option>Elders</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <label class="mt-2 mb-3" style="width:100%;">Kies een contactpersoon</td></label>
+                            <select name="contact_person" class="form form-control contact_persons" style="background-color: #FFF; padding:7px;" placeholder="vb: K-CMS-0001" required>
+                                    <option value="" disabled selected>Maak een keuze..</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer kms-modal-footer row">
+                            <button type="submit" class="btn btn-warning btn-kms-warning btnlinkcustomers" style="width:98%;"><i class="bx bx-plus" style="margin-top:4px;"></i> Toevoegen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
         <div class="modal fade mdl-new-parts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog kms-modal" role="document">
                 <div class="modal-content" style="overflow:hidden;">
@@ -2198,18 +2548,18 @@
                             <label class="mt-2">Onderdeel Code (Extern)</label>
                             <input type="text" name="code" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: cergos000003461" required>
                             <label class="mt-2">Naam v/h onderdeel</label>
-                            <input type="text" name="name" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            <input type="text" name="name" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Resistor 12V" required>
                             <label class="mt-2">Kosten (Ex. BTW)</label>
-                            <input type="number" step="any" name="costs" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            <input type="number" step="any" name="costs" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 5.00" required>
 
                             <label class="mt-2">BTW (%)</label>
-                            <input type="number" value="21" name="vat" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            <input type="number" value="21" name="vat" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 21" required>
 
                             <label class="mt-2">Aantal op voorraad</label>
-                            <input type="number" value="10" name="stock" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            <input type="number" value="10" name="stock" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 7" required>
                             
                             <label class="mt-2">Opbergplek op locatie</label>
-                            <textarea name="stock_location" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required></textarea>
+                            <textarea name="stock_location" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: Kast 2 - opbergla 4" required></textarea>
                         </div>
                         <div class="modal-footer kms-modal-footer row">
                             <button type="submit" class="btn btn-warning btn-kms-warning btnlinkcustomers" style="width:98%;"><i class="bx bx-upload" style="margin-top:4px;"></i> </button>
@@ -2329,18 +2679,18 @@
                         <table class="table table-dark">
                             <tbody>
                                 <tr>
-                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
+                                    <td><input type="radio" name="menuchoice" class="menuchoice_customers" value="new_particulier" checked></td>
                                     <td>Nieuwe particulier klant</td>
                                 </tr>
                                 <tr>
-                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
+                                    <td><input type="radio" name="menuchoice" class="menuchoice_customers" value="new_company"></td>
                                     <td>Nieuwe bedrijf</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="modal-footer kms-modal-footer">
-                        <a class="btn btn-danger" style="float:right;"><i class='bx bx-right-arrow-alt' ></i> volgende</a>
+                        <a class="btn btn-danger btn_customer_choice" style="float:right;"><i class='bx bx-right-arrow-alt' ></i> volgende</a>
                     </div>
                 </div>
             </div>

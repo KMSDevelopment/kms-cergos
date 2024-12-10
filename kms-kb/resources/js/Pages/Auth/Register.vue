@@ -46,7 +46,7 @@ const form = useForm({
                         <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  > Registreren </PrimaryButton>
                         
                         
-                        <Link :href="route('login')" class="rounded-md text-sm text-white-600 underline hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2 mb-2" style="color:#FFF; margin-bottom:0px; !important;">
+                        <Link :href="route('login')" class="rounded-md text-sm text-white-600 underline hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2 mb-2" style="color:#FFF; margin-bottom:0px !important;">
                            Klik hier om in te loggen
                         </Link>
 

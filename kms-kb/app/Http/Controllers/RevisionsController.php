@@ -7,6 +7,7 @@ use App\Models\Customers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Api;
 use App\Models\BrandModels;
+use App\Models\Company;
 use App\Models\CustomerRevisions;
 use App\Models\LinkedParts;
 use App\Models\Manuals;
@@ -680,6 +681,47 @@ class RevisionsController extends Controller
             'totalpages'=>$totalpages
         ]);
     }
+
+
+    public function companies(Request $request)
+    {
+        $current_page = $request->id;
+        $previous_page = $current_page - 1;
+        if($previous_page <= 0)
+        {
+            $previous_page = 1;
+            $current_page = 1;
+        }
+        $next_page = $current_page + 1;
+
+        $total_customers = Company::all()->count();
+        $totalpages = round($total_customers / 50);
+
+        if($next_page > $totalpages)
+        {
+            $next_page = $totalpages;
+        }
+
+        if($current_page > 1)
+        {
+            $from = $current_page * 50;
+            $customers = Company::where('id', '>=', $from)->limit(50)->get();
+        }
+        else
+        {
+            $customers = Company::limit(50)->get();
+        }
+
+        return Inertia::render('Companies', [
+            'customers' => $customers,
+            'page' => $current_page,
+            'next_page' => $next_page,
+            'prev_page' => $previous_page,
+            'total_customers' => $total_customers,
+            'totalpages'=>$totalpages
+        ]);
+    }
+
     public function revisions()
     {
         return Inertia::render('Revisions', [
@@ -964,5 +1006,18 @@ class RevisionsController extends Controller
         $data->save();
     }
 
+    public function part_create(Request $request)
+    {
+        $data = new RevisionParts();
+        $data->ref = $request->ref;
+        $data->code = $request->code;
+        $data->name = $request->name;
+        $data->costs = $request->costs;
+        $data->vat = $request->vat;
+        $data->stock = $request->stock;
+        $data->stock_location = $request->stock_location;
+        $data->save();
+        return Redirect::to('/rkb/parts');
+    }
 
 }
