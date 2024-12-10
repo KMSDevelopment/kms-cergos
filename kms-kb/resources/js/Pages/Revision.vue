@@ -94,7 +94,7 @@ async function updateComplainDesc(e) {
                         <td class="menubar-button btn-manual-add">
                             Nieuw
                         </td>
-                        <td class="menubar-button btn-del-revision-customer">
+                        <td class="menubar-button btn-del-onerevision" :id="revision.id">
                             Verwijderen
                         </td>
                         <td class="menubar-button">
@@ -108,6 +108,14 @@ async function updateComplainDesc(e) {
         <section class="body">
             <div class="container">
                 <div class="row justify-center">
+
+                    <div class="colomn" style="width:100%; position:relative; padding-top:25px; padding-bottom:25px;">
+                        <div class="kms-checker" style="margin-left:auto; margin-right:auto; top:15px; left:0px;" data-toggle="tooltip" data-placement="bottom" title="Check als deze reparatie is gecontroleerd">
+                            <input type="checkbox" class="kms-check-checker checkrevision" :id="revision.id" :value="revision.checked" :checked="revision.checked =='1'">
+                        </div>
+                        <h3 class="kms-column-subtitle" style="margin-left:100px; margin-top:-8px;">checked</h3>
+                    </div>
+
                     <div class="kms-body-column col-md-6 col-sm-12 col-lg-3 bg-gray-800 text-white kms-column-border">
                         <input type="text" class="form form-control" style="border:none; font-size:15px; background:none; color:#FFF; font-family: 'GoodTimes', sans-serif;" @keydown="updateRevisionTitle($event)" @keyup="updateRevisionTitle($event)" @change="updateRevisionTitle($event)" :id="revision.id" :value="revision.title">
                         <hr>

@@ -1110,6 +1110,30 @@
                     }
                 });
 
+                $('body').on('click', '.btn-del-onerevision', function() {
+                    if (confirm("Weet je zeker dat je deze reparatie wilt verwijderen") == true) {
+                        var value = $(this).attr('id');
+                        $.ajax({
+                            url: '/revision/delete', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id:value }, // Data to be sent to the server
+                            success: function(response) {
+                                // Code to execute if the request succeeds
+                                console.log("Reparatie verwijderd");
+                                window.location.replace('/rkb');
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+                    }
+                });
+
                 
                 $('body').on('click', '.btn_customer_choice', function() {
                    
@@ -1756,7 +1780,7 @@
                                 });
 
                                 $.each(response.reparaties, function (i, reparatie) {
-                                    $('.tbody_revisions').append('<tr><td><a href="/rkb/sort/DESC#revision'+reparatie.id+'" target="_BLANK">'+reparatie.title+'</a></td></tr>');
+                                    $('.tbody_revisions').append('<tr><td><a href="/revision/'+reparatie.id+'" target="_BLANK">'+reparatie.title+'</a></td></tr>');
                                 });
                                 $.each(response.cars, function (i, car) {
                                     $.each(car.models, function (i, model) {
