@@ -42,8 +42,13 @@ const submit = () => {
                         <TextInput type="email" name="email" class="input-field " placeholder="E-mailadres" style="color:#000 !important"  required></TextInput>
                         <TextInput id="pwd" type="Password" class="input-field " placeholder="Wachtwoord" style="color:#000 !important" required></TextInput>
                         <TextInput id="pwd" name="password" type="Password" class="input-field " style="color:#000 !important" placeholder="Bevestig uw wachtwoord" required></TextInput>
-                        <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  >
+
+                        <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  > Registreren
                         </PrimaryButton>
+
+                        <br/><br/>
+                        
+                        <a href="/login" style="color:#FFF; margin-top: 15px;">Heb je al een account? login..</a>
                     </form>
                 </div>
                 <span class="sp sp-t"></span>
