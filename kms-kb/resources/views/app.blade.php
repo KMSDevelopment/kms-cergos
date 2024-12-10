@@ -1590,7 +1590,9 @@
                     $('.mdl-car-help').modal('toggle');
                 });
                 
-
+                $('body').on('click', '.btn-new-parts', function() {
+                    $('.mdl-new-parts').modal('toggle');
+                });
                 
                 
                 $('body').on('click', '.checkrevision', function() {
@@ -2156,6 +2158,41 @@
         <div class="kms-btn-rnd-dark nextresult" style="display:none; position:fixed; z-index:999999999; bottom:25px; left:48%;"><table style="height: 100%; width: 100%; position: relative;"><tr><td style="width: 100%; height: 100%; text-align: center; vertical-align: middle; "><span style='font-size:11px; color:#FFF;'>meer</span></td></tr></table></div>
 
 
+
+        <div class="modal fade mdl-new-parts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Nieuw onderdeel</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/part/create" method="POST">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 300px; overflow-y:scroll; overflow-x:hidden;">
+                            <label>Product Nr. / Referentie. (Intern)</label>
+                            <input type="text" name="ref" class="form form-control" required>
+                            <label>Product Code. (Derde partij)</label>
+                            <input type="text" name="code" class="form form-control" required>
+                            <label>Naam v/h onderdeel</label>
+                            <input type="text" name="product_name" class="form form-control" required>
+                            <label>Kosten (ex. BTW)</label>
+                            <input type="number" step="any" name="purchase_costs" class="form form-control" required>
+                            <label>BTW Percentage</label>
+                            <input type="number" step="any" name="vat" class="form form-control" value="21" required>
+                            <label>Op voorraad</label>
+                            <input type="number" step="any" name="vat" class="form form-control" value="21" required>
+                            <label>Fysieke Locatie KMS</label>
+                            <textarea class="form form-control" name="location" required></textarea>
+                        </div>
+                        <div class="modal-footer kms-modal-footer">
+                            <button type="button" class="btn btn-warning" style="width:100%;"><i class='bx bx-plus' ></i> Aanmaken</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
 

@@ -158,7 +158,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/part/location/edit', [RevisionsController::class, 'part_location_edit'])->name('part.location.edit');
     Route::post('/part/name/edit', [RevisionsController::class, 'part_name_edit'])->name('part.name.edit');
     Route::post('/parts/delete', [RevisionsController::class, 'part_delete'])->name('parts.delete');
-
+    Route::post('/parts/create', [RevisionsController::class, 'part_create'])->name('parts.create');
     
 });
 
