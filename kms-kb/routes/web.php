@@ -19,10 +19,9 @@ Route::get('/', function () {
     ]);
 });
 
+
 Route::get('/dashboard', [ProfileController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::post('/register/new', [RegisteredUserController::class, 'store'])->name('register.store');
-
 Route::get('/rkb', [RevisionsController::class, 'view'])->middleware(['auth', 'verified'])->name('rkb');
 Route::get('/rkb/page/{page}', [RevisionsController::class, 'view_page'])->middleware(['auth', 'verified'])->name('rkb_page');
 Route::get('/rkb/filter/{api}', [RevisionsController::class, 'view_filter'])->middleware(['auth', 'verified'])->name('rkb_filter');

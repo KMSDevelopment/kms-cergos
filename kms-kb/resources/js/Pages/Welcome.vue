@@ -28,7 +28,7 @@ function handleImageError() {
 
 setTimeout(() => {
     window.location.replace('./register');
-}, "6300");
+}, "6000");
 </script>
 
 <template>

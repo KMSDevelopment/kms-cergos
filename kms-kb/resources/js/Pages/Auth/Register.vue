@@ -13,6 +13,11 @@ const form = useForm({
     password_confirmation: '',
 });
 
+const submit = () => {
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
 </script>
 
 <template>
@@ -32,22 +37,12 @@ const form = useForm({
                         <button id="reg" type="button" class="toggle-btn text-left;" style="text-align:left !important;" onclick="register()">Registreren</button>
                     </div>
                     <form action="/register/new" method="POST" id="register" class="input-group registerform">
-                    
                         <input type="hidden" name="_token" class="csrf_token">
                         <TextInput type="text" name="name" class="input-field " placeholder="Uw voor -en achternaam" style="color:#000 !important" required></TextInput>
-
                         <TextInput type="email" name="email" class="input-field " placeholder="E-mailadres" style="color:#000 !important"  required></TextInput>
-
                         <TextInput id="pwd" type="Password" class="input-field " placeholder="Wachtwoord" style="color:#000 !important" required></TextInput>
-
                         <TextInput id="pwd" name="password" type="Password" class="input-field " style="color:#000 !important" placeholder="Bevestig uw wachtwoord" required></TextInput>
-                        
-                        <Link :href="route('login')" class="rounded-md text-sm text-white-600 underline hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2 mb-2" style="color:#FFF; margin-bottom:0px; !important;">
-                           Klik hier om in te loggen
-                        </Link>
-
                         <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  >
-                            Registreren
                         </PrimaryButton>
                     </form>
                 </div>

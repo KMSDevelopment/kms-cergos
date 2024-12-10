@@ -1589,7 +1589,13 @@
                 $('body').on('click', '.btn-car-help', function() {
                     $('.mdl-car-help').modal('toggle');
                 });
+
                 
+                $('body').on('click', '.inp_regis', function() {
+                    var csrf = $('meta[name="csrf-token"]').attr('content');
+                    $('.csrf_token').val(csrf);
+                    $('.registerform').submit();
+                });
 
                 
                 
@@ -1928,14 +1934,6 @@
                     }
                 });
 
-                
-                    
-                $('body').on('click', '.inp_regis', function() {
-                    var csrf = $('meta[name="csrf-token"]').attr('content');
-                    $('.csrf_token').val(csrf);
-                    $('.registerform').submit();
-                });
-
 
                 $('body').on('click', '.btn-del-customers', function() {
                     var id = $(this).attr("id");
@@ -1947,8 +1945,6 @@
                             var value = $(this).val();
                         }
                     });
-
-
 
                     if(count == 0)
                     {
