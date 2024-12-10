@@ -41,23 +41,15 @@ const form = useForm({
                         <TextInput id="pwd" type="Password" class="input-field " placeholder="Wachtwoord" style="color:#000 !important" required></TextInput>
 
                         <TextInput id="pwd" name="password" type="Password" class="input-field " style="color:#000 !important" placeholder="Bevestig uw wachtwoord" required></TextInput>
-<<<<<<< HEAD
 
-                        <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  > Registreren
-=======
+
+                        <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  > Registreren </PrimaryButton>
+                        
                         
                         <Link :href="route('login')" class="rounded-md text-sm text-white-600 underline hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2 mb-2" style="color:#FFF; margin-bottom:0px; !important;">
                            Klik hier om in te loggen
                         </Link>
 
-                        <PrimaryButton type="button" class="submit-btn justify-center text-center inp_regis" style="margin-top:10px; padding-top: 0px;;" :class="{ 'opacity-25': form.processing }"  >
-                            Registreren
->>>>>>> 5128216fd3b126c5be350974f278e7a59752daba
-                        </PrimaryButton>
-
-                        <br/><br/>
-                        
-                        <a href="/login" style="color:#FFF; margin-top: 15px;">Heb je al een account? login..</a>
                     </form>
                 </div>
                 <span class="sp sp-t"></span>

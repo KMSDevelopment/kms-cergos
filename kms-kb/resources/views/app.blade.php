@@ -1590,7 +1590,9 @@
                     $('.mdl-car-help').modal('toggle');
                 });
                 
-
+                $('body').on('click', '.btn-new-parts', function() {
+                    $('.mdl-new-parts').modal('toggle');
+                });
                 
                 
                 $('body').on('click', '.checkrevision', function() {
@@ -2179,7 +2181,43 @@
         </div>
 
 
+        <div class="modal fade mdl-new-parts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Nieuw onderdeel</h5>
+                        <button type="button" class="close closemdl closereload" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/parts/create" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body kms-modal-body" style="max-height: 300px; overflow-y:scroll; overflow-x:hidden;">
+                            <label class="mt-2">Onderdeel Nr. / Referentie (Intern)</label>
+                            <input type="text" name="ref" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: 34567" required>
+                            <label class="mt-2">Onderdeel Code (Extern)</label>
+                            <input type="text" name="code" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: cergos000003461" required>
+                            <label class="mt-2">Naam v/h onderdeel</label>
+                            <input type="text" name="name" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            <label class="mt-2">Kosten (Ex. BTW)</label>
+                            <input type="number" step="any" name="costs" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
 
+                            <label class="mt-2">BTW (%)</label>
+                            <input type="number" value="21" name="vat" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+
+                            <label class="mt-2">Aantal op voorraad</label>
+                            <input type="number" value="10" name="stock" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required>
+                            
+                            <label class="mt-2">Opbergplek op locatie</label>
+                            <textarea name="stock_location" class="form form-control" style="background-color: #FFF; padding:7px;" placeholder="vb: audi" required></textarea>
+                        </div>
+                        <div class="modal-footer kms-modal-footer row">
+                            <button type="submit" class="btn btn-warning btn-kms-warning btnlinkcustomers" style="width:98%;"><i class="bx bx-upload" style="margin-top:4px;"></i> </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
 
