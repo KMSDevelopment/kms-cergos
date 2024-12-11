@@ -129,15 +129,8 @@ async function updateBuild(e) {
 
         <section class="body">
             <div class="container">
-                <div class="row">
-                    <div class="kms-body-column col-md-6 col-sm-12 col-lg-3 bg-gray-800 text-white kms-column-border" style="max-height:275px;">
-                        <img :src="model.img" style="    width: 100%;
-                        border-radius: 11px;
-                        border-style: solid;
-                        border-width: 4px;
-                        border-color: #465367; box-shadow:1px 1px 5px #000">
-                    </div>
-                    <div class="kms-body-column col-md-6 col-sm-12 col-lg-4 bg-gray-800 text-white kms-column-border">
+                <div class="row justify-center">
+                    <div class="kms-body-column col-md-6 col-sm-12 col-lg-5 bg-gray-800 text-white kms-column-border">
                         <h3 class="kms-column-subtitle" style="font-weight:normal;">Uitvoeringen
                             <div class="kms-btn-rnd-dark" id="btn-add-type" :alt="model.id" :title="brand.id" style="right:-20px;"><table style="height: 100%; width: 100%; position: relative;"><tr><td style="width: 100%; height: 100%; text-align: center; vertical-align: middle; padding-top: 7px;"><i class="bx bx-plus"></i></td></tr></table></div>
                         </h3>
@@ -178,7 +171,7 @@ async function updateBuild(e) {
                             <tbody>
                                 <tr v-for="revisionmodals in revisions" :class="'chbrevision_'+revisionmodals.revision_id+'model_'+revisionmodals.id">
                                     <td><input type="checkbox" name="chbrevision_id" class="chbmodelrevisions" :value="revisionmodals.id" :alt="revisionmodals.id"></td>
-                                    <td><a :href="'/rkb#revision'+revisionmodals.revision.id">ticket no. {{ revisionmodals.revision.ticket_no }} - {{ revisionmodals.revision.title }}</a></td>
+                                    <td><a :href="'/revision/'+revisionmodals.revision.id">ticket no. {{ revisionmodals.revision.ticket_no }} - {{ revisionmodals.revision.title }}</a></td>
                                     <td><a href="" class="kmi-badge kmi-badge-danger" style="min-width:50px;"><i class="bx bx-link"></i> 1</a></td>
                                 </tr>
                             </tbody>    
