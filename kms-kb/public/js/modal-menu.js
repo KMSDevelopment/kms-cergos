@@ -52,6 +52,10 @@ $(document).ready(function() {
         {
             window.location.replace("http://localhost/kms-apeldoorn.nl/api/mgr/spreadsheet/"+exporttype+'.php');
         }
+        else if(menuchoice_mgr == "mgr_api")
+        {
+            window.location.replace("http://localhost/kms-apeldoorn.nl/api/mgr/export/"+exporttype+'.php');
+        }
     });
 
 

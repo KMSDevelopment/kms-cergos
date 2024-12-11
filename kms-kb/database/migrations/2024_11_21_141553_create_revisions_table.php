@@ -17,6 +17,7 @@ return new class extends Migration
             $table->longText('ref')->nullable(true);
             $table->longText('title');
             $table->longText('complain_desc');
+            $table->integer('problem_type_id')->default(0);
             $table->longText('revision_desc')->nullable(true);
             $table->longText('price_ex')->nullable(true);
             $table->longText('price_inc')->nullable(true);

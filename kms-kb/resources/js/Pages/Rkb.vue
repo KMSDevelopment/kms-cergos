@@ -201,23 +201,6 @@ async function updateRevisionComplain(e) {
                         <br/>
                         <div class="row">
                             <div class="col-lg-7">
-                                <h4 class="kms-column-subtitle " style="font-size:13px;">Beschrijving<hr style="border-width: 2px; border-color: rgb(255, 0, 0);"></h4>
-                                <textarea class="form form-control" @keydown="updateRevisionComplain($event)" @keyup="updateRevisionComplain($event)" @change="updateRevisionComplain($event)" :id="item[0]" style="border:none; background:transparent; color:#FFF; height:150px;">{{ item[4] }}</textarea>
-                                <br/><br/>
-                            </div>
-                            <div class="col-lg-5 mb-3">
-                                <h4 class="kms-column-subtitle " style="font-size:13px;">
-                                    <a href="#" class="btn-link-klanten-revisions" :id="item[0]">Klant(en) <i class="bx bx-plus-circle" style="font-size:17px; float:right;"></i></a>
-                                    <hr style="border-width: 2px; border-color: rgb(255, 0, 0);">
-                                </h4>
-                                
-                                <ul class="pt-3 ">
-                                    <li class="kms-list-link" v-for="customer in item[2]"><a :href="'/customer/'+customer.id" id="docs-card" style="width:100%" class="model_li">{{ customer.firstname }} {{ customer.lastname }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-7">
                                 <h4 class="kms-column-subtitle " style="font-size:13px;">Merk(en)<hr style="border-width: 2px; border-color: rgb(255, 0, 0);"></h4>
                                 <ul class="pt-3 ">
                                     <li class="kms-list-link pb-3" v-for="brands in item[6]" style="margin-bottom:25px"><a :href="'/rkb/cars/sort/alfabetisch#'+brands.brand.toLowerCase()" :alt="brands.id" id="docs-card" style="width:100%" class="model_li"><img :src="brands.logo" style="height:50px; float:left; margin-top:-15px; margin-right:15px;"> {{ brands.brand }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg></a></li>
@@ -233,6 +216,24 @@ async function updateRevisionComplain(e) {
                                 </ul>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-7">
+                                <h4 class="kms-column-subtitle " style="font-size:13px;">Beschrijving<hr style="border-width: 2px; border-color: rgb(255, 0, 0);"></h4>
+                                <textarea class="form form-control" @keydown="updateRevisionComplain($event)" @keyup="updateRevisionComplain($event)" @change="updateRevisionComplain($event)" :id="item[0]" style="border:none; background:transparent; color:#FFF; height:100px;">{{ item[4] }}</textarea>
+                                <br/><br/>
+                            </div>
+                            <div class="col-lg-5 mb-3">
+                                <h4 class="kms-column-subtitle " style="font-size:13px;">
+                                    <a href="#" class="btn-link-klanten-revisions" :id="item[0]">Klant(en) <i class="bx bx-plus-circle" style="font-size:17px; float:right;"></i></a>
+                                    <hr style="border-width: 2px; border-color: rgb(255, 0, 0);">
+                                </h4>
+                                
+                                <ul class="pt-3 ">
+                                    <li class="kms-list-link" v-for="customer in item[2]"><a :href="'/customer/'+customer.id" id="docs-card" style="width:100%" class="model_li">{{ customer.firstname }} {{ customer.lastname }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -807,6 +807,17 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+.icon_navlink{
+    opacity:0.5;
+    color:#808a9e;
+    transition:all 0.3s ease-in;
+}
+.icon_navlink:hover{
+    opacity:1;
+    color:#FFF;
+    transition:all 0.3s ease-out;
+}
+
 @media screen and (max-width: 480px) {
     
     .kms-h2{

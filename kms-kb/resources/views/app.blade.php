@@ -927,7 +927,12 @@
                 });
 
                 
+                $('body').on('click', '.btnodooli', function() {
+                    $('.mdl-search-odoo').modal('toggle');
+                });
 
+                
+        
                 
                 $('body').on('click', '#btn-upload-logo', function() {
                     var id = $(this).attr("alt");
@@ -1257,10 +1262,145 @@
                         width: "50%"
                     }, 300, function() {
                         $( ".new_manual" ).fadeIn('slow');
-
-
                     });
                 });
+
+                
+                
+                
+                
+                $('body').on('click', '.rev_id_btn', function() {
+                    var id = $(this).attr('id');
+                    $('.rev_id_result_odoo').val(id);
+                    var revision_id = $(this).attr('alt');
+                    $('.rev_id_result_old_site').val(revision_id);
+                    $(".btnodoocheck").attr("href", "/revision/"+id)
+                    $(this).css({'border-color':'red'});
+                    $('.mdl-search-odoo-result').modal('toggle');
+                });
+                
+                
+                $('body').on('click', '.closeodoo', function() {
+                    $( ".kms-new-tab-right" ).animate({
+                        width: "0%"
+                    }, 300, function() {
+                        $( ".searchodoo" ).fadeOut('slow');
+                        $( ".searcherresult" ).fadeOut('slow');
+                        $( ".searcherloading" ).fadeOut('slow');
+                        $( ".kms-new-tab-right" ).fadeOut('fast');
+                    });
+                });
+
+                $('body').on('click', '.btnsearchodoo', function() {
+
+                    $('.mdl-search-odoo').modal('hide');
+                    $('._token').val($('meta[name="csrf-token"]').attr('content'));
+
+                    var revision_id = $('.reviid').val();
+                    $('.searcherloading').fadeIn(200);
+
+                    
+
+                    $( ".kms-new-tab-right" ).fadeIn('fast');
+                    $( ".kms-new-tab-right" ).animate({
+                        width: "33%"
+                    }, 300, function() {
+                        $( ".searchodoo" ).fadeIn('slow');
+                    });
+
+                    var choice = $('.menuchoice_odoo:checked').val();
+                    if(choice == "brand")
+                    {
+                        $('.searcherloading').delay(5000).fadeOut(300);
+
+                        $.ajax({
+                            url: '/revision/odoo/search/brand', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { revision_id: revision_id}, // Data to be sent to the server
+                            success: function(response) {
+                                // Code to execute if the request succeeds
+
+                                if(response.count == 0)
+                                {
+                                    alert("Geen reparaties gevonden");   
+                                }
+                                else
+                                {           
+                                    $('.tbody-result-odoo').empty();
+
+                                    $.each(response, function (i, res2) {
+                                        
+                                        for (var i in res2) {
+                                            if(res2[i] != null)
+                                            {
+                                                $('.table-result-odoo > tbody:last-child').append('<tr class="rev_id_btn" alt="'+revision_id+'" id="'+res2[i].id+'" style="cursor:pointer"><td></td><td>'+res2[i].id+'</td><td>'+res2[i].title+'</td></tr>');
+                                            }
+                                        }
+
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+                        $( ".searcherresult" ).delay(5400).fadeIn('slow');
+                    }
+                    if(choice == "keywords")
+                    {
+                        var input = $('.revbrandmodal').attr('alt');
+                        var keywords=prompt("Op welke keywords wil je zoeken?",input);
+                        if (keywords!=null){
+                            $.ajax({
+                                url: '/revision/odoo/search/keyword', // The URL to which the request is sent
+                                dataType: "json",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                                data: { revision_id: revision_id, keywords:keywords}, // Data to be sent to the server
+                                success: function(response) {
+                                    // Code to execute if the request succeeds
+
+                                    if(response.count == 0)
+                                    {
+                                        alert("Geen reparaties gevonden");   
+                                    }
+                                    else
+                                    {           
+                                        $('.tbody-result-odoo').empty();
+
+                                        $.each(response, function (i, res2) {
+                                            
+                                            for (var i in res2) {
+                                                if(res2[i] != null)
+                                                {
+                                                    $('.table-result-odoo > tbody:last-child').append('<tr class="rev_id_btn" alt="'+revision_id+'" id="'+res2[i].id+'" style="cursor:pointer"><td></td><td>'+res2[i].id+'</td><td>'+res2[i].title+'</td></tr>');
+                                                }
+                                            }
+
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    // Code to execute if the request fails
+                                    console.log('Error:', error);
+                                }
+                            });
+                        }
+
+                        $('.searcherloading').delay(5000).fadeOut("slow");
+                        $( ".searcherresult" ).delay(5400).fadeIn('slow');
+                    }
+                });
+
+
 
                 $('body').on('click', '.btnchoosemenu', function() {
 
@@ -2231,6 +2371,8 @@
                     }
                 });
 
+         
+
 
                 $('body').on('click', '.checkbox_checkall', function() {
                     if( $(this).is(":checked") )
@@ -2472,6 +2614,38 @@
 
         <div class="kms-new-tab-right" style="overflow-y:scroll; overflow-x:hidden;">
             
+
+        
+            <div class="kms-tab-content searchodoo" style="z-index:99999999999999;">
+                <h2 class="kms-column-subtitle" style="color:#FFF;"><a title="inklappen" class="closeodoo" href="#"><span class="fa fa-arrow-right"></span></a> Odoo Reparaties</h2>
+                <hr style="border-color:#FFF;">
+                <div class="searcherloading" style="width:100%; height:100%;">
+                    <table style="width:100%; height:100%;">
+                        <tr>
+                            <td style="width:100%; height:500px; text-align:center; vertical-align:middle;">
+                                <img src="/images/loader.gif" style="width:100px; margin-left:auto; margin-right:auto;"><br/>
+                                <h4 style="color:#CCC">Data laden ogenblik geduld..</h4>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="searcherresult" style="width:100%; display:none;">
+                    <div class="table-responsive" style="height:850px; overflow-y:scroll;">
+                        <table class="table table-dark table-hover table-result-odoo">
+                            <thead>
+                                <th></th>
+                                <th>Odoo id</th>
+                                <th>Reparatie</th>
+                            </thead>
+                            <tbody class="tbody-result-odoo">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="kms-tab-content update_manual">
                 <h2 class="kms-column-subtitle" style="color:#FFF;">Handleiding</h2>
                 <hr>
@@ -2573,7 +2747,87 @@
 
 
 
-        
+        <div class="modal fade mdl-search-odoo-result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Reparatie samenvoegen</h5>
+                        <button type="button" class="close closemdl closereload closeodoo" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/revision/merge" method="POST">
+                    <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                        <input type="hidden" name="revision_id" class="rev_id_result_odoo">
+                        <input type="hidden" name="revision_id_old" class="rev_id_result_old_site">
+
+                        <input type="hidden" name="_token" class="_token">
+                        <p>Wat wilt u doen met de gekozen repartie?</p>
+                        <table class="table table-dark mt-2">
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" name="chb_title" class="menuchoice_odoo_action kms-checkboxes" value="yes" checked></td>
+                                    <td>Titel overnemen</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="chb_price" class="menuchoice_odoo_action kms-checkboxes" value="yes" checked></td>
+                                    <td>Prijs overnemen</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="merge" class="menuchoice_odoo_action kms-checkboxes" value="duplicate" checked></td>
+                                    <td>Nieuwe reparatie aanmaken (combinatie van de twee)</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="merge" class="menuchoice_odoo_action kms-checkboxes" value="merge"></td>
+                                    <td>Reparatie samenvoegen met huidige</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer kms-modal-footer">
+                        <a class="btn btn-danger btnodoocheck" href="#" style="float:left;" target="_BLANK"> Odoo reparatie bekijken</a>
+                        <button class="btn btn-warning" type="submit"><i class="bx bx-cog"></i> Acties uitvoeren</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="modal fade mdl-search-odoo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Odoo Reparaties Zoeken</h5>
+                        <button type="button" class="close closemdl closereload closeodoo" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                        <p>Combineer reparaties door het systeem automatisch te laten zoeken op mogelijke overeenkomsten</p>
+                        <table class="table table-dark mt-2">
+                            <tbody>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice" class="menuchoice_odoo" value="brand"></td>
+                                    <td>Op basis van automerk en/of model</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice" class="menuchoice_odoo" value="keywords" checked></td>
+                                    <td>Op basis van zelfgekozen zoekwoorden</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer kms-modal-footer">
+                        <button class="btn btn-warning btnsearchodoo" type="button"><i class="bx bx-search"></i> Zoeken in Odoo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="modal fade mdl-add-media" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
             <div class="modal-dialog kms-modal" role="document">
@@ -3363,7 +3617,7 @@
                             <table class="table table-dark">
                                 <tbody>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_api" disabled></td>
+                                        <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_api"></td>
                                         <td>Via API (Coming Soon)</td>
                                     </tr>
                                     <tr>

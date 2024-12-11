@@ -102,6 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/revision/title/edit', [RevisionsController::class, 'title_edit'])->name('revision.title.edit');
     Route::post('/revision/complain/edit', [RevisionsController::class, 'complain_edit'])->name('revision.complain.edit');
     Route::post('/revision/revision_desc/edit', [RevisionsController::class, 'revision_desc_edit'])->name('revision.revision_desc.edit');
+    Route::post('/revision/revision_problem/edit', [RevisionsController::class, 'revision_problem_edit'])->name('revision_problem.revision_desc.edit');
+
     Route::post('/revision/modellen/read', [RevisionsController::class, 'read_modellen_revision'])->name('revision.modellen.read');
     Route::post('/revision/modellen/unlink', [RevisionsController::class, 'unlink_modellen_revision'])->name('revision.modellen.unlink');
     Route::post('/revision/modellen/link', [RevisionsController::class, 'link_modellen_revision'])->name('revision.modellen.link');
@@ -111,6 +113,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/revision/ticket/link', [RevisionsController::class, 'link_revision_tickets'])->name('revision.ticket.link');
     Route::post('/revision/part/link', [RevisionsController::class, 'link_part_revision'])->name('revision.part.link');
     
+    Route::post('/revision/odoo/search/brand', [RevisionsController::class, 'revision_odoo_search_brand'])->name('revision.odoo.search.brand');
+    Route::post('/revision/odoo/search/keyword', [RevisionsController::class, 'revision_odoo_search_keyword'])->name('revision.odoo.search.keyword');
+    Route::post('/revision/merge', [RevisionsController::class, 'revision_merge'])->name('revision.merge');
     
 
     Route::get('/revision/{id}', [RevisionsController::class, 'view_revision'])->name('revision.view');

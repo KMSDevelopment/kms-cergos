@@ -32,25 +32,25 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')" style="text-transform: uppercase;" data-toggle="tooltip" data-placement="bottom" title="Werknemersportaal">
-                                    RECEPTIE/HR
+                                    <i class='bx bx-user-voice icon_navlink' style="font-size:32px;"></i>
                                 </NavLink>
                                 <NavLink :href="route('rkb')" :active="route().current('rkb')" data-toggle="tooltip" data-placement="bottom" title="Reparatie Kennisbank">
-                                    RKB
+                                    <i class="bx bx-car icon_navlink" style="font-size:32px;"></i>
                                 </NavLink>
                                 <NavLink :href="route('mkb')" :active="route().current('mkb')" data-toggle="tooltip" data-placement="bottom" title="Marketing Kennisbank">
-                                    MKB
+                                    <i class="bx bxs-megaphone icon_navlink" style="font-size:32px;"></i>
                                 </NavLink>
                                 <NavLink :href="route('dkb')" :active="route().current('dkb')" data-toggle="tooltip" data-placement="bottom" title="Development Kennisbank">
-                                    DKB
+                                    <i class="bx bx-code-block icon_navlink" style="font-size:32px;"></i>
                                 </NavLink>
-                                <NavLink :href="route('activity')" :active="route().current('activity')" data-toggle="tooltip" data-placement="bottom" title="Activity Tracker">
-                                    <i class='bx bx-station' style="font-size:24px;"></i>
+                                <NavLink :href="route('activity')" :active="route().current('activity')" data-toggle="tooltip" data-placement="bottom" title="Activity & Exports">
+                                    <i class='bx bxs-file-export icon_navlink' style="font-size:24px;"></i>
                                 </NavLink>
                                 <NavLink :href="route('api')" :active="route().current('api')" data-toggle="tooltip" data-placement="bottom" title="Api Tracker">
-                                    <i class="fi fi-rr-tachometer-fastest" style="font-size:24px;"></i>
+                                    <i class="fi fi-rr-tachometer-fastest icon_navlink" style="font-size:24px;"></i>
                                 </NavLink>
                                 <NavLink :href="route('settings')" :active="route().current('settings')" data-toggle="tooltip" data-placement="bottom" title="Configuratie">
-                                    <i class='bx bx-cog' style="font-size:24px;"></i>
+                                    <i class='bx bx-cog icon_navlink' style="font-size:24px;"></i>
                                 </NavLink>
                             </div>
                         </div>

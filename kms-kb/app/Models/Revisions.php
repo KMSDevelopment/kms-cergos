@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Revisions extends Model
 {
     protected $table = "revisions";
-    protected $fillable = ['api_id','title','complain_desc','revision_desc','parts','models','checked'];
+    protected $fillable = ['api_id','title','complain_desc','revision_problem_types','revision_desc','parts','models','checked'];
     					
     public function customers()
     {
@@ -22,5 +22,9 @@ class Revisions extends Model
     public function api()
     {
         return $this->hasOne(Api::class, 'id');
+    }
+    public function problem()
+    {
+        return $this->hasOne(ProblemTypes::class, 'id');
     }
 }

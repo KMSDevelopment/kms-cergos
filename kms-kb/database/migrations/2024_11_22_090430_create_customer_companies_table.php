@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('invoice_email')->nullable(true)->default(NULL);
             $table->string('phonenr')->nullable(true)->default(NULL);
             $table->string('address')->nullable(true)->default(NULL);
+            $table->string('housenr')->nullable(true)->default(NULL);
             $table->string('zipcode')->nullable(true)->default(NULL);
             $table->string('city')->nullable(true)->default(NULL);
             $table->string('country')->nullable(true)->default(NULL);

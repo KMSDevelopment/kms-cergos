@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('odoo_id')->nullable(true)->default(NULL);
             $table->integer('api_id')->nullable(true)->default(NULL);
             $table->string('mgr_id')->nullable(true)->default(NULL);
+            $table->integer('comp_id')->nullable(true)->default(NULL);
             $table->integer('brand_id')->nullable(true)->default(NULL);
             $table->integer('model_id')->nullable(true)->default(NULL);
             $table->string('reference')->nullable(true)->default(NULL);

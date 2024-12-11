@@ -92,10 +92,10 @@ async function updateCity(e) {
                         <h2 class="kms-h2 text-xl font-semibold leading-tight text-gray-800" style="text-align:right;">Reparatie Kennisbank</h2>
                     </div>
                     <div class="kms-breadcrumb-column col-md-12 col-sm-12 col-lg-4">
-                        <input type="text" class="form form-control kms-txt-input-light mt-6 text-left" placeholder="Type wat u wilt zoeken en klik op enter..">
+                        <input type="text" class="form form-control kms-txt-input-light mt-6 text-left btnbrowserfindinput" placeholder="Zoek op deze pagina..">
                     </div>
                     <div class="kms-breadcrumb-column col-md-12 col-sm-12 col-lg-3">
-                        <button class="btn btn-danger" style="margin-top: 7px;"><i class="bx bx-search"></i> Zoeken</button>
+                        <button class="btn btn-danger btnbrowserfind" style="margin-top: 7px;"><i class="bx bx-search"></i> Zoeken</button>
                     </div>
                 </div>
             </div>

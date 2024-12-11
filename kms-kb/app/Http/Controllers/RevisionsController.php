@@ -12,6 +12,8 @@ use App\Models\CustomerRevisions;
 use App\Models\LinkedParts;
 use App\Models\Manuals;
 use App\Models\Media;
+use App\Models\ProblemTypes;
+use App\Models\RevisionMerge;
 use App\Models\RevisionModels;
 use App\Models\RevisionParts;
 use App\Models\User;
@@ -56,7 +58,7 @@ class RevisionsController extends Controller
 
     public function view()
     {
-        $revisions = Revisions::with('customers')->with('revisionmodels')->limit(100)->get();
+        $revisions = Revisions::with('customers')->with('revisionmodels')->limit(100)->orderBy('api_id', 'asc')->get();
         $current_page = 1;
 
         $total_revisions = Revisions::all()->count();
@@ -126,7 +128,7 @@ class RevisionsController extends Controller
             $page = $totalpages;
         }
 
-        $revisions = Revisions::where('id', '>=', $from)->with('customers')->with('revisionmodels')->limit(100)->get();
+        $revisions = Revisions::where('id', '>=', $from)->with('customers')->with('revisionmodels')->orderBy('api_id', 'asc')->limit(100)->get();
 
         $rivisies = array();
         foreach($revisions as $revision)
@@ -751,7 +753,12 @@ class RevisionsController extends Controller
         $revision->revision_desc = $request->value;
         $revision->save();
     }
-    
+    public function revision_problem_edit(Request $request)
+    {
+        $revision = Revisions::find($request->id);
+        $revision->problem_type_id = $request->value;
+        $revision->save();
+    }
 
 
     public function read_modellen_revision(Request $request)
@@ -809,16 +816,23 @@ class RevisionsController extends Controller
     public function view_revision(Request $request)
     {
 
+        $all_problems = ProblemTypes::all();
         $all_customers = Customers::all();
         $all_users = User::all();
         $modeldata = array();
+        $odoo_suggestions = array();
 
         $revision_id = $request->id;
-        $revisions = Revisions::find($revision_id);
+        $revisions = Revisions::where('id',$revision_id)->first();
         $revisions_customers = CustomerRevisions::where('revision_id',$revision_id)->with('customer')->with('engineer')->get();
         $manuals = Manuals::where('revision_id', $revision_id)->get();
         $revisions_models = RevisionModels::where('revision_id',$revision_id)->get();
         $parts = LinkedParts::where('revision_id',$revision_id)->with('part')->get();
+        $merges = RevisionMerge::where('revision_id',$revision_id)->get();
+        
+        $api = Api::find($revisions->api_id);
+        $problem = ProblemTypes::find($revisions->problem_type_id);
+
 
         foreach($revisions_models as $rev_model)
         {
@@ -833,7 +847,11 @@ class RevisionsController extends Controller
             'manuals' => $manuals,
             'parts'=>$parts,
             'customers'=>$all_customers,
-            'users'=>$all_users
+            'users'=>$all_users,
+            'apidata'=>$api,
+            'all_problems'=>$all_problems,
+            'problem'=>$problem,
+            'merges'=>$merges
         ]);
     }
 
@@ -1135,4 +1153,187 @@ class RevisionsController extends Controller
         $media = Media::where('manual_id',$request->id)->get();
         return response()->json(['media' => $media]);
     }
+
+
+
+
+    
+    public function revision_odoo_search_brand(Request $request)
+    {
+        $modals = RevisionModels::where('revision_id',$request->revision_id)->get();
+        $result = array();
+        $result_brands = array();
+        $brands = array();
+
+        foreach($modals as $modal)
+        {
+            $customerrevs = CustomerRevisions::where('brand_id',$modal->brand_id)->where('api_id',10)->get();
+            foreach($customerrevs as $revisi)
+            {
+                $revision = Revisions::find($revisi->revision_id);
+                array_push($result,$revision);
+            }
+        }
+        
+
+        return response()->json(['result' => $result, 'result_brands'=>$result_brands]);
+    }
+    
+
+
+    public function revision_odoo_search_keyword(Request $request)
+    {
+        $keywords = $request->keywords;
+        $revisions = Revisions::where('title', 'LIKE binary', '%'.$keywords.'%')->where('api_id',10)->get();
+        return response()->json(['revisions' => $revisions]);
+    }
+
+    public function revision_merge(Request $request)
+    {
+        $revision_id_old = $request->revision_id_old;
+        $revision_id = $request->revision_id;
+        $odoo_revision = Revisions::find($revision_id);
+        $site_revision = Revisions::find($revision_id_old);
+
+        if( isset($site_revision) && !is_null($site_revision)) {
+
+        }
+        else
+        {
+            dd("shit");
+        }
+
+        $manual = Manuals::where('revision_id', $revision_id_old)->get();
+        $models = RevisionModels::where('revision_id', $revision_id_old)->get();
+        $customer_revs = CustomerRevisions::where('revision_id', $revision_id_old)->get();
+
+        $chb_title = $request->chb_title;
+        $chb_price = $request->chb_price;
+        $merge = $request->merge;
+
+        if($merge == "duplicate")
+        {
+            $data = new Revisions();
+
+            if($chb_title == "yes")
+            {
+                $data->title = $odoo_revision->title;
+            }
+            else
+            {
+                $data->title = $site_revision->title;
+            }
+
+
+            if($chb_price == "yes")
+            {
+                $data->price_ex = $odoo_revision->price_ex;
+                $data->price_inc = $odoo_revision->price_inc;
+            }
+            else
+            {
+                $data->price_ex = $site_revision->price_ex;
+                $data->price_inc = $site_revision->price_inc;
+            }
+
+            $data->api_id = 17;
+            $data->ref = $request->ref;
+            $data->complain_desc = $request->complain_desc;
+            $data->revision_desc = $request->revision_desc;
+            $data->problem_type_id = $request->problem_type_id;
+            $data->parts = $request->parts;
+            $data->models = $request->models;
+            $data->parts = $request->parts;
+            $data->save();
+            $last_id = $data->id;
+
+            foreach($manual as $man)
+            {
+                $new_manual = new Manuals();
+                $new_manual->revision_id = $last_id;
+                $new_manual->title = $man->title;
+                $new_manual->text = $man->text;
+                $new_manual->save();
+                $new_manual_id = $new_manual->id;
+
+                $media = Media::where('manual_id', $man->id)->get();
+
+                foreach($media as $medias)
+                {
+                    $new_media = new Media();
+                    $new_media->revision_id = $last_id;
+                    $new_media->manual_id = $new_manual_id;
+                    $new_media->file_name = $medias->file_name;
+                    $new_media->file_link = $medias->file_link;
+                    $new_media->extension = $medias->extension;
+                    $new_media->save();
+                }
+            }
+            
+            foreach($models as $model)
+            {
+                $new_rev_model = new RevisionModels();
+                $new_rev_model->revision_id = $last_id;
+                $new_rev_model->brand_id = $model->brand_id;
+                $new_rev_model->model_id = $model->model_id;
+                $new_rev_model->type_id = $model->type_id;
+                $new_rev_model->variant_id = $model->variant_id;
+                $new_rev_model->save();
+            }
+
+            foreach($customer_revs as $customer_rev)
+            {
+                $new_cust_rev = new CustomerRevisions();
+                $new_cust_rev->revision_id = $last_id;
+                $new_cust_rev->api_id = $customer_rev->api_id;
+                $new_cust_rev->ticket_no = $customer_rev->ticket_no;
+                $new_cust_rev->mgr_id = $customer_rev->mgr_id;
+                $new_cust_rev->odoo_id = $customer_rev->odoo_id;
+                $new_cust_rev->brand_id = $customer_rev->brand_id;
+                $new_cust_rev->customer_id = $customer_rev->customer_id;
+                $new_cust_rev->user_id_assigned = $customer_rev->user_id_assigned;
+                $new_cust_rev->start = $customer_rev->start;
+                $new_cust_rev->end = $customer_rev->end;
+                $new_cust_rev->status = $customer_rev->status;
+                $new_cust_rev->sales_price = $customer_rev->sales_price;
+                $new_cust_rev->save();
+            }
+
+            $merge = new RevisionMerge();
+            $merge->revision_id = $revision_id_old;
+            $merge->old_site_rev_id = $revision_id_old;
+            $merge->odoo_rev_id = $revision_id;
+            $merge->new_rev_id = $last_id;
+            $merge->save();
+
+            return Redirect::to('/revision/'.$last_id);
+
+        }
+        else if($merge == "merge")
+        {
+
+            if($chb_title == "yes")
+            {
+                $site_revision->title = $odoo_revision->title;
+            }
+            if($chb_price == "yes")
+            {
+                $site_revision->price_ex = $odoo_revision->price_ex ?? null;
+                $site_revision->price_inc = $odoo_revision->price_inc ?? null;
+            }
+            $site_revision->save();
+
+            $merge = new RevisionMerge();
+            $merge->revision_id = $revision_id_old;
+            $merge->old_site_rev_id = $revision_id_old;
+            $merge->odoo_rev_id = $revision_id;
+            $merge->save();
+
+            return Redirect::to('/revision/'.$revision_id_old);
+        }
+    }
+
+
+
+    
 }
