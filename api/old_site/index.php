@@ -50,8 +50,6 @@ while($row=mysqli_fetch_array($data))
                 $nid = $row['nid'];
                 $title = $row['title'];
                 
-
-
                 $query1 = "SELECT * FROM node_revision WHERE nid='$nid'";
 
                 $data1=mysqli_query($conn,$query1);   

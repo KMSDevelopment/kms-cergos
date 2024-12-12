@@ -158,7 +158,7 @@ async function updateRevisionComplain(e) {
         <section class="body">
             <div class="container">
                 <div class="row justify-center ">
-                    <div class="kms-body-column col-md-6 col-sm-12 col-lg-5 pt-4 bg-gray-800 text-white kms-column-border" style="overflow:hidden;" :id="'revision'+item[0]" v-for="item in products">
+                    <div class="kms-body-column col-md-6 col-sm-12 col-lg-5 pt-5 bg-gray-800 text-white kms-column-border" style="overflow:hidden;" :id="'revision'+item[0]" v-for="item in products">
                         
                         <div class="kms-checker" style="bottom:0px !important; top:93%; right:44%;" data-toggle="tooltip" data-placement="bottom" title="Check als deze reparatie is gecontroleerd">
                             <input type="checkbox" class="kms-check-checker checkrevision" :id="item[0]" :value="item[8]" :checked="item[8] =='1'">
@@ -169,17 +169,48 @@ async function updateRevisionComplain(e) {
                         padding: 5px;
                         background-color: transparent;
                         color: rgb(255, 255, 255);
-                        top: -5px;
-                        right: 45%;
+                        top: -2px;
+                        padding-left:35px;
+                        left: 0%;
                         background: #191f29;
-                        box-shadow: 0px 1px 4px #d91717;" :title="'Ingeladen van '+item[7]">{{ item[7] }}</span>
+                        box-shadow: 0px 1px 4px #d91717;" :title="'Ingeladen van '+item[7]"><i class='bx bxs-cloud-download' style="font-size:25px; top:0px; opacity:0.4; left:5px; position:absolute;"></i> {{ item[7] }}</span>
+
+
+                        
+                        <span class="alert alert-danger" v-if="item[9] != '0'" style="font-size: 10px;
+                        position: absolute;
+                        padding: 5px;
+                        background-color: transparent;
+                        color: rgb(255, 255, 255);
+                        top: -2px;
+                        padding-left:35px;
+                        padding-right:20px;
+                        left: 120px;
+                        background: #191f29;
+                        box-shadow: rgb(23 217 147) 0px 1px 4px;
+                        border-color: green;" title="Aanwezig op de nieuwe site"><i class='bx bx-check' style="font-size:25px; top:0px; opacity:0.4; left:5px; position:absolute;"></i> NIEUWE SITE</span>
+
+                        
+                        <span class="alert alert-danger" v-if="item[10] != '0'" style="font-size: 10px;
+                        position: absolute;
+                        padding: 5px;
+                        background-color: transparent;
+                        color: rgb(255, 255, 255);
+                        top: -2px;
+                        padding-left:35px;
+                        padding-right:20px;
+                        left: 270px;
+                        background: #191f29;
+                        box-shadow: rgb(23 217 147) 0px 1px 4px;
+                        border-color: green;" title="Aanwezig in my gadget repairs"><i class='bx bx-check' style="font-size:25px; top:0px; opacity:0.4; left:5px; position:absolute;"></i> MY GADGET REPAIRS</span>
+
 
                         <h3 class="kms-column-subtitle mt-2" style="font-size:17px;">
                             <input type="checkbox" class="chbrevisions kms-checkboxes" :id="item[0]" style="float:left; margin-top:3px; margin-right:5px;">
                             <i class='bx bx-label kms-icons-sm-lbl' style="float:left;"></i>
                             <input type="text" class="form form-control" style="border:none; margin-top:-8px; color:#FFF; background:transparent; width:85%; float:left; font-size:14px;" :value="item[3]" @keydown="updateRevisionTitle($event)" @keyup="updateRevisionTitle($event)" @change="updateRevisionTitle($event)" :id="item[0]">
 
-                            <a :href="'/revision/'+item[0]" class="btn btn-warning" style="border-radius:50%; position:absolute; top:20px;"><i class="bx bx-cog"></i></a>
+                            <a :href="'/revision/'+item[0]" class="btn btn-warning" style="border-radius:50%; position:absolute; top:-5px; right:-5px;"><i class="bx bx-cog"></i></a>
                         </h3>
                         <hr class="mt-5">
 

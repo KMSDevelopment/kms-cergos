@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('revisions', function (Blueprint $table) {
             $table->id();
             $table->integer('api_id');
+            $table->integer('site')->default(0);
+            $table->integer('mgr')->default(0);
             $table->longText('ref')->nullable(true);
             $table->longText('title');
             $table->longText('complain_desc');

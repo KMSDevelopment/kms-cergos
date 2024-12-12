@@ -143,7 +143,7 @@ async function updateCity(e) {
                             Klantenbestand 
                             <a href="/rkb/customers/1" class="btn btn-danger" title="Bekijk particuliere klanten" style="float:right; margin-right:15px; margin-top:-10px;"><i class="bx bx-user"></i></a>
                             <a href="/rkb/customers/1" class="btn btn-danger" title="Bekijk zakelijke klanten" style="float:right; margin-right:15px; margin-top:-10px;"><i class='bx bxs-business'></i></a>
-                            <span class="alert alert-warning" style="font-size:10px; padding:5px; top:-3px; margin-right:15px; background:none; color:#FFF; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; float:right;">Aantal zakelijke klanten: {{ total_customers }}</span>
+                            <a title="Bekijk alle zakelijk klanten op één pagina" href="/rkb/all/companies"><span class="alert alert-warning" style="font-size:10px; padding:5px; top:-3px; margin-right:15px; background:none; color:#FFF; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; float:right;">Aantal zakelijke klanten: {{ total_customers }}</span></a>
                         </h3>
                         <hr style="margin-top:20px;">
                         <br/>

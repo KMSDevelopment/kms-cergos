@@ -18,9 +18,12 @@ return new class extends Migration
             $table->string('model_type_id')->nullable(true)->default(NULL);
             $table->string('variant_id')->nullable(true)->default(NULL);
             $table->string('distributor_id')->nullable(true)->default(NULL);
+            $table->string('distributor_product_nr')->nullable(true)->default(NULL);
 
+            $table->string('mgr')->default(0);
             $table->string('ref')->nullable(true)->default(NULL);
             $table->string('code');
+            
             $table->string('name');
             $table->string('img')->nullable(true);
 

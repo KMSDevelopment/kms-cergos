@@ -3351,10 +3351,6 @@
                             <tbody>
                                 <tr>
                                     <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
-                                    <td>Vanuit My Odoo</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
                                     <td>Vanuit My Gadget Repairs</td>
                                 </tr>
                                 <tr>
@@ -3438,19 +3434,15 @@
                             <tbody>
                                 <tr>
                                     <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
-                                    <td>Vanuit My Odoo</td>
+                                    <td>Vanuit Odoo</td>
                                 </tr>
                                 <tr>
                                     <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
                                     <td>Vanuit My Gadget Repairs</td>
                                 </tr>
                                 <tr>
-                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_manual"></td>
-                                    <td>Vanuit het RDW</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_manual"></td>
-                                    <td>Vanuit AllData</td>
+                                    <td><input type="radio" name="menuchoice" class="menuchoice" value="new_part" checked></td>
+                                    <td>Vanuit de website</td>
                                 </tr>
                                 <tr>
                                     <td><input type="radio" name="menuchoice" class="menuchoice" value="new_manual"></td>
@@ -3480,16 +3472,16 @@
                             <table class="table table-dark">
                                 <tbody>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="mgr" checked></td>
-                                        <td>Naar My Gadget Repairs</td>
-                                    </tr>
-                                    <tr>
                                         <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="site"></td>
                                         <td>Naar de website</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="csv"></td>
-                                        <td>Naar een CSV bestand</td>
+                                        <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="mgr" checked></td>
+                                        <td>Naar My Gadget Repairs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="site_csv"></td>
+                                        <td>Naar een Excel bestand</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -3498,8 +3490,8 @@
                             <table class="table table-dark">
                                 <tbody>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_api" disabled></td>
-                                        <td>Via API (Coming Soon)</td>
+                                        <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_api"></td>
+                                        <td>Via API</td>
                                     </tr>
                                     <tr>
                                         <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_xslx"></td>
@@ -3516,11 +3508,33 @@
                                         <td>Van Reparaties</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_tickets" checked></td>
+                                        <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_tickets" disabled></td>
+                                        <td>Van Tickets<a href="#" title="Niet actief" style="float:right;"><i class='bx bx-x' style="font-size: 26px; position: absolute; right: 21px; cursor: help;"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_customers" disabled></td>
+                                        <td>Van Klanten<a href="#" title="Niet actief" style="float:right;"><i class='bx bx-x' style="font-size: 26px; position: absolute; right: 21px; cursor: help;"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="menuchoice_mgr_export_delete_rev" class="menuchoice_mgr_export_delete_rev kms-checkboxes" value="1"></td>
+                                        <td><em style="color:#999; font-size:13px;">Bestaande records verwijderen</em> <a href="#" title="Wanneer aangevinkt verwijderd het systeem alle bestaande records in MGR en voegt alle records uit KMS Cergos toe. Wanneer niet aangevinkt controleert het systeem op duplicaten, laat oude records staan, past ze aan en voegt eventuele nieuwe toe." style="float:right;"><i class='bx bx-info-circle' style="font-size: 26px; position: absolute; right: 21px; cursor: help;"></i></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="export_ticket_stages third_stage_export_tickets_csv" style="display:none;">
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_csv_export" class="menuchoice_csv_export" value="export_services" checked></td>
+                                        <td>Van Reparaties</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_csv_export" class="menuchoice_csv_export" value="export_tickets"></td>
                                         <td>Van Tickets</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_customers" checked></td>
+                                        <td><input type="radio" name="menuchoice_csv_export" class="menuchoice_csv_export" value="export_customers"></td>
                                         <td>Van Klanten</td>
                                     </tr>
                                 </tbody>
@@ -3603,12 +3617,8 @@
                                         <td>Naar My Gadget Repairs</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="site"></td>
-                                        <td>Naar de website</td>
-                                    </tr>
-                                    <tr>
                                         <td><input type="radio" name="menuchoice_export" class="menuchoice_export" value="csv"></td>
-                                        <td>Naar een CSV bestand</td>
+                                        <td>Naar een Excel bestand</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -3618,7 +3628,7 @@
                                 <tbody>
                                     <tr>
                                         <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_api"></td>
-                                        <td>Via API (Coming Soon)</td>
+                                        <td>Via API</td>
                                     </tr>
                                     <tr>
                                         <td><input type="radio" name="menuchoice_mgr" class="menuchoice_mgr" value="mgr_xslx"></td>
@@ -3636,21 +3646,44 @@
                                     </tr>
                                     <tr>
                                         <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_models"></td>
-                                        <td>Van Modellen</td>
+                                        <td>Van Modellen en Typen</td>
                                     </tr>
                                     <tr>
                                         <td><input type="radio" name="menuchoice_mgr_export" class="menuchoice_mgr_export" value="export_products"></td>
                                         <td>Van Onderdelen</td>
                                     </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="menuchoice_mgr_export_delete" class="menuchoice_mgr_export_delete kms-checkboxes" value="1"></td>
+                                        <td><em style="color:#999; font-size:13px;">Bestaande records verwijderen</em> <a href="#" title="Wanneer aangevinkt verwijderd het systeem alle bestaande records in MGR en voegt alle records uit KMS Cergos toe. Wanneer niet aangevinkt controleert het systeem op duplicaten, laat oude records staan, past ze aan en voegt eventuele nieuwe toe." style="float:right;"><i class='bx bx-info-circle' style="font-size: 26px; position: absolute; right: 21px; cursor: help;"></i></a></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="export_car_stages third_stage_export_cars_excel" style="display:none;">
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_excel_export" class="menuchoice_mgr_export" value="export_brands" checked></td>
+                                        <td>Van Automerken</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_excel_export" class="menuchoice_mgr_export" value="export_models"></td>
+                                        <td>Van Modellen en Typen</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="radio" name="menuchoice_excel_export" class="menuchoice_mgr_export" value="export_products"></td>
+                                        <td>Van Onderdelen</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                     <div class="modal-footer kms-modal-footer">
                         <input type="hidden" name="revision_id" class="revision_id_ticket">
                         <a class="btn btn-danger btn_stages btn_first_stage" style="float:left; display:none;"><i class='bx bx-left-arrow-alt' ></i> vorig</a>
                         <a class="btn btn-danger btn_stages btn_second_stage_return" style="float:left; display:none;"><i class='bx bx-left-arrow-alt' ></i> vorig</a>
-
                         <a class="btn btn-danger btn_stages btn_second_stage" style="float:right;"><i class='bx bx-right-arrow-alt' ></i> volgende</a>
                         <a class="btn btn-danger btn_stages btn_third_stage" style="float:right; display:none;"><i class='bx bx-right-arrow-alt' ></i> volgende</a>
                         <a class="btn btn-warning btn_stages btn_submit_export" style="float:right; display:none;"><i class='bx bx-download' ></i> exporteren</a>
@@ -4208,13 +4241,16 @@
                     </div>
                     <div class="modal-body kms-modal-body">
                         <div class="row">
-                            <table style="margin-bottom:10px;">
+                            <table style="margin-bottom:15px;">
                                 <tr>
                                     <td style="vertical-align: middle; padding-left:15px;"><input type="radio" name="type" value="request" checked></td>
-                                    <td style="vertical-align: middle;">Data opvragen</td>
+                                    <td style="vertical-align: middle;">Data request</td>
 
                                     <td style="vertical-align: middle;"><input type="radio" name="type" value="send"></td>
                                     <td style="vertical-align: middle;">Data versturen</td>
+
+                                    <td style="vertical-align: middle;"><input type="radio" name="type" value="tweak"></td>
+                                    <td style="vertical-align: middle;">Data tweak</td>
                                 </tr>
                             </table>
                         </div>
@@ -4227,7 +4263,7 @@
                         <input type="text" name="apikey" class="form form-control kms-modal-input" placeholder="API Key" style="border-radius:5px;" required>
                     </div>
                     <div class="modal-footer kms-modal-footer">
-                        <button type="submit" class="btn btn-danger" style="width:100%;">Save changes</button>
+                        <button type="submit" class="btn btn-danger" style="width:100%;"><i class="bx bx-save"></i> Save API</button>
                     </div>
                 </div>
             </form>

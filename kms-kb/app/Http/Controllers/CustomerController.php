@@ -64,6 +64,20 @@ class CustomerController extends Controller
         return Redirect::to('/rkb/customers/1');
     }
 
+    public function all_customers_view()
+    {
+        $customers = Customers::orderby('firstname', 'ASC')->get();
+        return Inertia::render('AllCustomers', [
+            'customers' => $customers
+        ]);
+    }
+    public function all_companies_view()
+    {
+        $companies = Company::orderby('company_name', 'ASC')->get();
+        return Inertia::render('AllCompanies', [
+            'customers' => $companies
+        ]);
+    }
 
     public function view_customer(Request $request)
     {

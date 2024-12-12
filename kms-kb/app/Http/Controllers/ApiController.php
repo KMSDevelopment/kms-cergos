@@ -12,7 +12,8 @@ class ApiController extends Controller
     public function settings_view()
     {
         return Inertia::render('Settings', [
-            'apis' => Api::orderBy('sort')->get()
+            'apis' => Api::where('type', 'request')->orwhere('type', 'send')->orderBy('sort')->get(),
+            'tweakers' => Api::where('type', 'tweak')->orderBy('sort')->get(),
         ]);
     }
     public function apis_read()

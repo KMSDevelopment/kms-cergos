@@ -715,7 +715,7 @@ input[type='radio']:checked:after {
 }
 
 .richText .richText-editor{
-    height: 600px;
+    height: 200px;
 }
 
 .btnspecs{

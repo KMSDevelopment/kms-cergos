@@ -66,6 +66,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/rkb/cars/sort/{sort}', [RevisionsController::class, 'cars_sort'])->name('rkb.cars.sort.page');
     Route::post('/rkb/cars/search', [RevisionsController::class, 'cars_search'])->name('rkb.cars.search.page');
 
+    Route::get('/rkb/all/customers', [CustomerController::class, 'all_customers_view'])->name('rkb.customers.all');
+    Route::get('/rkb/all/companies', [CustomerController::class, 'all_companies_view'])->name('rkb.companies.all');
+
     Route::get('/rkb/customers/{id}', [RevisionsController::class, 'customers'])->name('rkb.customers.overview');
     Route::get('/rkb/companies/{id}', [RevisionsController::class, 'companies'])->name('rkb.companies.overview');
     Route::get('/rkb/revisions', [RevisionsController::class, 'revisions'])->name('rkb.revisions.overview');
@@ -169,8 +172,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/customer/company/read', [CustomerController::class, 'customer_company_read'])->name('customer.company.read');
     Route::post('/customer/company/link', [CustomerController::class, 'customer_company_link'])->name('customer.company.link');
-    Route::post('/companies/all', [CustomerController::class, 'all_companies'])->name('companies.all');
-    Route::post('/customers/all', [CustomerController::class, 'all_customers'])->name('customers.all');
+    Route::get('/companies/all', [CustomerController::class, 'all_companies'])->name('companies.all');
+    Route::get('/customers/all', [CustomerController::class, 'all_customers'])->name('customers.all');
     Route::post('/brands/all', [CarController::class, 'brands_all'])->name('brands.all');
 
     Route::post('/part/stock/edit', [RevisionsController::class, 'part_stock_edit'])->name('part.stock.edit');

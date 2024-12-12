@@ -100,7 +100,7 @@ class RevisionsController extends Controller
                 }
             }
 
-            $rivisies[$revision->id] = array($revision->id, $revisioncustomers, $revisiecustomers, $revision->title, $revision->revision_desc, $revisiemodels, $revisiebrands, $apidata, $revision->checked);
+            $rivisies[$revision->id] = array($revision->id, $revisioncustomers, $revisiecustomers, $revision->title, $revision->revision_desc, $revisiemodels, $revisiebrands, $apidata, $revision->checked, $revision->site, $revision->mgr);
         }
 
         $apis = Api::all();
@@ -655,11 +655,11 @@ class RevisionsController extends Controller
         if($current_page > 1)
         {
             $from = $current_page * 50;
-            $customers = Customers::where('id', '>=', $from)->with('brand')->limit(50)->get();
+            $customers = Customers::where('id', '>=', $from)->with('brand')->orderby('lastname', 'ASC')->limit(50)->get();
         }
         else
         {
-            $customers = Customers::with('brand')->limit(50)->get();
+            $customers = Customers::with('brand')->orderby('lastname', 'ASC')->limit(50)->get();
         }
 
         $apiarray = array();
