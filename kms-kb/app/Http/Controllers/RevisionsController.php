@@ -509,6 +509,7 @@ class RevisionsController extends Controller
 
         $cars = Brand::where('id', '>=', $from)->with('models')->with('customers')->with('revisions')->limit(15)->get();
         $ticket_nrs = array();
+        $kentekens = array();
         $customers = array();
 
         $apiarray = array();
@@ -522,7 +523,9 @@ class RevisionsController extends Controller
             $api_ids[$car->id] = $api->id;
             $apiarray[$car->id] = $api->platform;
             $countcustomer = 0;
+            $countlicenses = 0;
             $customer = array();
+            $kenteken = array();
             
             foreach($brandcustomers as $brandcustomer)
             {
@@ -534,6 +537,14 @@ class RevisionsController extends Controller
                     $countcustomer = $countcustomer + 1;
                 }
             }
+            
+            $licenses = LicensePlate::where('brand_id',$car->id)->get();
+            foreach($licenses as $license)
+            {
+                $kenteken[$countlicenses] = [$license->license_plate, $license->customer_id, $license->eerste_tenaamstelling, $license->vervaldatum_apk];
+                $kentekens[$car->id] = $kenteken;
+                $countlicenses = $countlicenses + 1;
+            }
         }
         $apis = Api::all();
 
@@ -544,7 +555,8 @@ class RevisionsController extends Controller
             'totalpages'=>$totalpages,
             'total_cars'=>$total_cars,
             'apis' => $apis,
-            'customers'=>$customers
+            'customers'=>$customers,
+            'kentekens'=>$kentekens
         ]);
     }
 

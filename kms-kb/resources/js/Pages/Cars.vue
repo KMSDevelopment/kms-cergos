@@ -175,7 +175,6 @@ async function updateCarBrand(e) {
                             </div>
                         </div>
 
-
                         <div class="row mt-4">
                             <div class="col-lg-7 col-md-12 col-sm-12 pb-4">
                                 <h4 class="kms-column-subtitle" style="font-size:13px;"><a href="#" id="btn-link-model" :alt="item.id" :title="item.brand"><i class='bx bx-plus-circle' style="font-size:19px; float:right;"></i> Modellen</a><hr style="border-width:2px; border-color:#ff0000;"></h4>
