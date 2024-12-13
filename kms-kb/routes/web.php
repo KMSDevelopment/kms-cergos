@@ -143,6 +143,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/revision/checked', [RevisionsController::class, 'revision_check'])->name('revision.check');
     
+    Route::get('/company/{id}', [CustomerController::class, 'view_company'])->name('company.view');
     Route::get('/customer/{id}', [CustomerController::class, 'view_customer'])->name('customers.view');
     Route::post('/customers/read', [CustomerController::class, 'read_customers'])->name('customers.read');
     Route::post('/customer/company/create', [CustomerController::class, 'create_company'])->name('customers.company.create');
@@ -154,6 +155,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/revision/customers/link', [CustomerController::class, 'link_customers_revision'])->name('revision.customers.link');
     Route::post('/customers/delete', [CustomerController::class, 'customers_delete'])->name('customers.delete');
 
+    Route::post('/customer/list/check', [CustomerController::class, 'customers_list_check'])->name('customers.list.check');
+    Route::post('/customers/make/company', [CustomerController::class, 'customers_make_company'])->name('customers.make.company');
+    Route::post('/customers/company/relate', [CustomerController::class, 'customers_company_relate'])->name('customers.company.relate');
+    Route::post('/customer/reference/edit', [CustomerController::class, 'customers_reference_edit'])->name('customers.reference.edit');
     Route::post('/customer/firstname/edit', [CustomerController::class, 'customers_firstname_edit'])->name('customers.firstname.edit');
     Route::post('/customer/lastname/edit', [CustomerController::class, 'customers_lastname_edit'])->name('customers.lastname.edit');
     Route::post('/customer/address/edit', [CustomerController::class, 'customers_address_edit'])->name('customers.address.edit');

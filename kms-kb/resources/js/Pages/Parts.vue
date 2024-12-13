@@ -117,19 +117,22 @@ async function updateProductName(e) {
                             <div class="col-12">
                                 <table class="table table-hover table-dark">
                                     <thead style="border-bottom: 5px solid rgb(52 52 52); line-height: 38px;">
-                                        <th></th>
+                                        <th style="width:35px;"></th>
+                                        <th>code</th>
                                         <th>Referentie</th>
                                         <th style="padding-left:15px;">Product</th>
                                         <th style="padding-left:15px;">Locatie</th>
-                                        <th style="padding-left:15px; text-align:right; padding-right:25px;">Voorradig</th>
-                                        <th></th>
+                                        <th style="padding-left:15px; text-align:right; padding-right:25px; width:100px;">Voorradig</th>
                                     </thead>
                                     <tbody>
                                         <tr v-for="part in parts" :class="'part'+part.id">
-                                            <td >
+                                            <td>
                                                 <input type="checkbox" class="kms-checkboxes partschbs" :value="part.id"> 
                                             </td>
-                                            <td style="width:100px;">
+                                            <td style="width:10px;">
+                                                {{ part.ref }}
+                                            </td>
+                                            <td style="width:130px; padding-left:20px; padding-right:20px;">
                                                 {{ part.code }}
                                             </td>
                                             <td>

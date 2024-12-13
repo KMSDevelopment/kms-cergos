@@ -67,7 +67,9 @@ td{
     font-family: ProRacing;
     src: url("/fonts/Pro Racing.otf") format("opentype");
 }
-
+.font-sans{
+    font-family: 'Funnel Sans' !important;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -109,7 +111,7 @@ td{
     padding-top:5px; 
     padding-bottom:5px;
     max-width: 165px;
-    box-shadow: 0px 0px 0px #b9130b;
+    box-shadow: 0px 1px 3px #b9130b !important;
     cursor: pointer;
     width:165px;
     transition:all 0.4s ease-in;
@@ -125,7 +127,7 @@ td{
     max-width: 165px;
     cursor: pointer;
     width:165px;
-    box-shadow: 0px 10px 15px #b9130b;
+    box-shadow: 0px 10px 15px #b9130b !important;
     transition:all 0.4s ease-out;
     text-align: center;
 }
@@ -321,6 +323,9 @@ td{
     transition:all 0.5s ease-in;
     cursor: pointer;
 }
+.btn-warning{
+    box-shadow: 3px 3px 1px #FFF !important;
+}
 .kms-btn-rnd:hover{
     transition:all 0.5s ease-out;
     transform: rotate(360deg);
@@ -388,7 +393,7 @@ td{
 .kms-icon-buttons{
     color:#FFF;
     cursor:pointer;
-    box-shadow: 1px 1px 15px #06081f;
+    box-shadow: 1px 0px 4px #000000;
     transition:all 0.2s ease-in;
 }
 .kms-icon-buttons:hover{
@@ -406,14 +411,15 @@ td{
     transition:all 0.3s ease-in;
 }
 .kms-icon-btn-active
-{
-    color: #eb4444;
-    box-shadow: inset 1px 2px 9px #06081f;
+{    
+    color: #f3aeae;
+    box-shadow: inset 1px 6px 7px #06081f;
     transition: all 0.2s ease-in;
     text-shadow: 3px 3px 3px #000;
+    background: #273447;
 }
 .kms-bx-icons:hover{
-    font-size:43px;
+    font-size:48px;
     transition:all 0.2s ease-out;
 }
 
@@ -717,7 +723,14 @@ input[type='radio']:checked:after {
 .richText .richText-editor{
     height: 200px;
 }
-
+th{
+    background: #1a1f25;
+    box-shadow: -1px -1px 8px #000;
+    padding-left:10px;
+}
+td{
+    box-shadow: -1px -1px 8px #000 !important;
+}
 .btnspecs{
     background: rgb(35 29 29);
     border-radius: 50%;

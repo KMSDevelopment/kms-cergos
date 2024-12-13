@@ -4,7 +4,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
-    customers: Array
+    customers: Array,
+    apis: Array,
+    api_name: Array,
+    api_ids: Array
 })
 
 async function updateFirstname(e) {

@@ -694,6 +694,7 @@ class RevisionsController extends Controller
     public function customers(Request $request)
     {
         $current_page = $request->id;
+
         $previous_page = $current_page - 1;
         if($previous_page <= 0)
         {
@@ -714,11 +715,11 @@ class RevisionsController extends Controller
         if($current_page > 1)
         {
             $from = $current_page * 50;
-            $customers = Customers::where('id', '>=', $from)->with('brand')->orderby('lastname', 'ASC')->limit(50)->get();
+            $customers = Customers::where('id', '>=', $from)->with('brand')->limit(50)->get();
         }
         else
         {
-            $customers = Customers::with('brand')->orderby('lastname', 'ASC')->limit(50)->get();
+            $customers = Customers::with('brand')->limit(50)->get();
         }
 
         $apiarray = array();
@@ -730,6 +731,7 @@ class RevisionsController extends Controller
             $api_ids[$customer->id] = $api->id;
             $apiarray[$customer->id] = $api->platform;
         }
+        $companies = Company::all();
         
         return Inertia::render('Customers', [
             'customers' => $customers,
@@ -740,7 +742,8 @@ class RevisionsController extends Controller
             'next_page' => $next_page,
             'prev_page' => $previous_page,
             'total_customers' => $total_customers,
-            'totalpages'=>$totalpages
+            'totalpages'=>$totalpages,
+            'companies'=>$companies
         ]);
     }
 

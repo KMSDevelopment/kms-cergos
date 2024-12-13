@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Api;
 use App\Models\Company;
 use App\Models\CustomerRevisions;
 use App\Models\Customers;
@@ -67,8 +68,23 @@ class CustomerController extends Controller
     public function all_customers_view()
     {
         $customers = Customers::orderby('firstname', 'ASC')->get();
+        
+        $apis = Api::all();
+        $apiarray = array();
+        $api_ids = array();
+
+        foreach($customers as $customer)
+        {
+            $api = Api::find($customer->api_id);
+            $api_ids[$customer->id] = $api->id;
+            $apiarray[$customer->id] = $api->platform;
+        }
+
         return Inertia::render('AllCustomers', [
-            'customers' => $customers
+            'customers' => $customers,
+            'apis' => $apis,
+            'api_name' => $apiarray,
+            'api_ids' => $api_ids,
         ]);
     }
     public function all_companies_view()
@@ -88,6 +104,17 @@ class CustomerController extends Controller
             'companies' => $companies
         ]);
     }
+
+
+    public function view_company(Request $request)
+    {
+        $company = Company::find($request->id);
+        return Inertia::render('Company', [
+            'company' => $company
+        ]);
+    }
+
+    
 
     public function read_customers(Request $request)
     {
@@ -262,6 +289,102 @@ class CustomerController extends Controller
         $customers->phonenr = $request->value;
         $customers->save();
     }
+    public function customers_company_relate(Request $request)
+    {
+        $customers = Customers::find($request->id);
+        $customers->comp_id	 = $request->value;
+        $customers->save();
+    }
+
+
+
+    public function customers_make_company(Request $request)
+    {
+        $customers = Customers::find($request->id);
+        $firstname = $customers->firstname;
+        $middlename = $customers->middlename;
+        $lastname = $customers->lastname;
+        $email = $customers->email;
+        $phonenr = $customers->phonenr;
+        $address = $customers->address;
+        $housenr = $customers->housenr;
+        $zipcode = $customers->zipcode;
+        $city = $customers->city;
+        $country = $customers->country;
+
+        
+        $data = new Company();
+        $data->company_name = "$firstname $middlename $lastname";
+        $data->email = $email;
+        $data->phonenr = $phonenr;
+        $data->address = $address;
+        $data->housenr = $housenr;
+        $data->zipcode = $zipcode;
+        $data->city = $city;
+        $data->country = $country;
+        $data->save();
+
+        $customers->delete();
+    }
+
+    
+    public function customers_list_check()
+    {
+        $customers = Customers::all();
+        $lastnames = array();
+        $emails = array();
+        $phonenrs = array();
+
+        foreach($customers as $customer)
+        {
+            $lastname_duplicates = Customers::where('lastname', $customer->lastname)->whereNot('id', $customer->id)->get();
+
+            if($lastname_duplicates)
+            {
+                foreach($lastname_duplicates as $dupt)
+                {
+                    if(!in_array($dupt->lastname, $lastnames))
+                    {
+                        array_push($lastnames, $dupt->lastname);
+                    }
+                }
+            }
+            
+            $email_duplicates = Customers::where('email', $customer->email)->whereNot('id', $customer->id)->get();
+
+            if($email_duplicates)
+            {
+                foreach($email_duplicates as $mdup)
+                {
+                    if(!in_array($mdup->email, $emails))
+                    {
+                        array_push($emails, $mdup->email);
+                    }
+                }
+            }
+            
+            $phone_duplicates = Customers::where('phonenr', $customer->phonenr)->whereNot('id', $customer->id)->get();
+
+            if($phone_duplicates)
+            {
+                foreach($phone_duplicates as $pdup)
+                {
+                    if(!in_array($pdup->phonenr, $phonenrs))
+                    {
+                        array_push($phonenrs, $pdup->phonenr);
+                    }
+                }
+            }
+        }
+
+        $count_lastname_duplicates = count($lastnames);
+        $count_email_duplciates = count($emails);
+        $count_phonenr_duplciates = count($phonenrs);
+
+        return response()->json(['count_lastname_duplicates' => $count_lastname_duplicates, 'count_email_duplciates' => $count_email_duplciates, 'count_phonenr_duplciates' => $count_phonenr_duplciates, 'lastnames'=>$lastnames, 'emails'=>$emails, 'phonenrs'=>$phonenrs]);
+    }
+    
+
     public function customer_company_link(Request $request)
     {
         $company = Company::find($request->companyid);
@@ -269,5 +392,5 @@ class CustomerController extends Controller
         $company->save();
         return Redirect::to('/customer/'.$request->id);
     }
-
+    
 }

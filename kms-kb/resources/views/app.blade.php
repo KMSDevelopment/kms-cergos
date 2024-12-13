@@ -966,6 +966,9 @@
                     $('.mdl-add-variant').modal('toggle');
                 });
 
+                $('body').on('click', '.btn-edit-customers', function() {
+                    $('.mdl-edit-customers').modal('toggle');
+                });
 
                 $('body').on('click', '.btn-revision-mdl-ticket', function() {
                     var revision_id = $(this).attr('id');
@@ -1424,7 +1427,180 @@
                 
 
 
+                $('body').on('click', '.btncompaniechoose', function() {
+                    var choice = $('.companies_id').val();
+                    // customerchbs
+                    $(".customerchbs").each( function() {
+                        if( $(this).is(":checked") ){
+                            var value = $(this).val();
+                            $.ajax({
+                                url: '/customers/company/relate', // The URL to which the request is sent
+                                dataType: "json",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                                data: { id:value, value:choice }, // Data to be sent to the server
+                                success: function(response) {
+                                    // Code to execute if the request succeeds
+                                    console.log("Klant toegevoegd aan bedrijf");
+                                },
+                                error: function(xhr, status, error) {
+                                    // Code to execute if the request fails
+                                    console.log('Error:', error);
+                                }
+                            });
+                        }
+                    });
+                    location.reload();
+                });
 
+
+
+
+                $('body').on('click', '.btnclientactions', function() {
+                    var choice = $('.menuchoice_customer_action:checked').val();
+                    if(choice == "relatecompany")
+                    {
+                        $('.mdl-edit-customers').modal('hide');
+                        $('.mdl-all-companies').modal('show');
+                    }
+                    if(choice == "tocompany")
+                    {
+                        if(confirm("Je maakt van deze klant een bedrijf (dus de voor -en achternaam worden bijvoorbeeld het bedrijfsnaam). Weet je zeker dat je deze actie wilt uitvoeren?"))
+                        {
+                            $(".customerchbs").each( function() {
+                                if( $(this).is(":checked") ){
+                                    var value = $(this).val();
+                                    $.ajax({
+                                        url: '/customers/make/company', // The URL to which the request is sent
+                                        dataType: "json",
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                                        data: { id:value, value:choice }, // Data to be sent to the server
+                                        success: function(response) {
+                                            // Code to execute if the request succeeds
+                                            console.log("Klant omgezet bedrijf");
+                                        },
+                                        error: function(xhr, status, error) {
+                                            // Code to execute if the request fails
+                                            console.log('Error:', error);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                    if(choice == "checklist")
+                    {
+
+                        $.ajax({
+                            url: '/customer/list/check', // The URL to which the request is sent
+                            dataType: "json",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'POST', // The HTTP method to use for the request (GET, POST, etc.)
+                            data: { id: 1 }, // Data to be sent to the server
+                            success: function(response) {
+
+                                $( ".searcherloadingcheck" ).delay(1000).fadeOut(400);
+                                $( ".searcherresultcheck" ).delay(1500).fadeIn('fast');
+                                console.log(response);
+
+                                $('.lastana').html(response.count_lastname_duplicates);
+                                $('.mailss').html(response.count_email_duplciates);
+                                $('.phoness').html(response.count_phonenr_duplciates);
+                                $( ".kms-new-tab-left" ).fadeIn('fast');
+
+                                $( ".kms-new-tab-left" ).animate({
+                                    width: "33%"
+                                }, 500, function() {
+                                    $( ".matchings" ).fadeIn('fast');
+                                    $('#tbody_table_matches').empty();
+                                    $('#tbody_table_matches_lastnames').empty();
+                                    $('#tbody_table_matches_phones').empty();
+
+                                    $.each(response.emails, function (i, res2) {
+                                        $('#tbody_table_matches').append('<tr class="rev_id_btn" style="cursor:pointer"><td><input type="checkbox" alt="'+res2+'"></td><td>'+res2+'</td></tr>');
+                                    });
+                                    $.each(response.lastnames, function (i, res3) {
+                                        $('#tbody_table_matches_lastnames').append('<tr class="rev_id_btn" style="cursor:pointer"><td><input type="checkbox" alt="'+res2+'"></td><td>'+res3+'</td></tr>');
+                                    });
+                                    $.each(response.phonenrs, function (i, res4) {
+                                        $('#tbody_table_matches_phones').append('<tr class="rev_id_btn" style="cursor:pointer"><td><input type="checkbox" alt="'+res2+'"></td><td>'+res4+'</td></tr>');
+                                    });
+
+                                    
+                                    $( "#tbody_table_matches_lastnames" ).fadeOut('fast');
+                                    $( "#tbody_table_matches_phones" ).fadeOut('fast');
+                                });
+
+                            },
+                            error: function(xhr, status, error) {
+                                // Code to execute if the request fails
+                                console.log('Error:', error);
+                            }
+                        });
+
+
+                        $('.mdl-edit-customers').modal('hide');
+                        $( ".searcherloadingcheck" ).fadeIn('fast');
+                        $( ".searchduplicates" ).fadeIn('fast');
+                        $( ".kms-new-tab-right" ).animate({
+                            width: "33%"
+                        }, 500, function() {
+                            $( ".kms-new-tab-right" ).fadeIn('fast');
+                        });
+                    }
+                });
+                
+                $('body').on('click', '.email_matches', function() {
+                    $('.tbodymatches').fadeOut(300);
+                    $( "#tbody_table_matches" ).delay(310).fadeIn(500);
+                });
+                
+                $('body').on('click', '.phonenr_matches', function() {
+                    $('.tbodymatches').fadeOut(300);
+                    $( "#tbody_table_matches_phones" ).delay(310).fadeIn(500);
+                });
+                
+                $('body').on('click', '.lastname_matches', function() {
+                    $('.tbodymatches').fadeOut(300);
+                    $( "#tbody_table_matches_lastnames" ).delay(310).fadeIn(500);
+                });
+
+
+
+
+
+
+
+
+
+
+                
+                $('body').on('click', '.closecustomercheck', function() {
+                    $( ".kms-new-tab-right" ).fadeOut('fast');
+                    $( ".searcherloadingcheck" ).fadeOut(500);
+                    $( ".searcherresultcheck" ).fadeOut('fast');
+                    $( ".kms-new-tab-right" ).animate({
+                        width: "0%"
+                    }, 300, function() {
+                    });
+                });
+                
+                $('body').on('click', '.closecustomercheck', function() {
+                    $( ".kms-new-tab-right" ).fadeOut('fast');
+                    $( ".searcherloadingcheck" ).fadeOut(500);
+                    $( ".searcherresultcheck" ).fadeOut('fast');
+                    $( ".kms-new-tab-right" ).animate({
+                        width: "0%"
+                    }, 300, function() {
+                    });
+                });
 
 
 
@@ -2614,6 +2790,51 @@
 
         <div class="kms-new-tab-right" style="overflow-y:scroll; overflow-x:hidden;">
             
+            <div class="kms-tab-content searchduplicates" style="z-index:99999999999999;">
+                <h2 class="kms-column-subtitle" style="color:#FFF;"><a title="inklappen" class="closecustomercheck" href="#"><span class="fa fa-arrow-right"></span></a> KLANTENLIJST CHECK</h2>
+                <hr style="border-color:#FFF;">
+                <div class="searcherloadingcheck" style="width:100%; height:100%;">
+                    <table style="width:100%; height:100%;">
+                        <tr>
+                            <td style="width:100%; height:500px; text-align:center; vertical-align:middle;">
+                                <img src="/images/loader.gif" style="width:100px; margin-left:auto; margin-right:auto;"><br/>
+                                <h4 style="color:#CCC">Data checken ogenblik geduld..</h4>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="searcherresultcheck" style="width:100%; display:none;">
+                    <div class="table-responsive" style="height:850px; overflow-y:scroll;">
+                        <a href="#" class="email_matches">
+                        <table class="table table-dark table-hover table-result-customers-check-email" style="border-bottom-color:#a75a56; border-bottom-style:solid; border-bottom-width:2px;">
+                            <thead>
+                                <th><i class="bx bx-plus"></i> Match op e-mailadres
+                                <span style="float:right;" class="mailss"></span>
+                                </th>
+                            </thead>
+                        </table>
+                        </a>
+                        <a href="#" class="lastname_matches">
+                        <table class="table table-dark table-hover table-result-customers-check">
+                            <thead>
+                                <th><i class="bx bx-plus"></i> Match op achternaam
+                                <span style="float:right;" class="lastana"></span>
+                                </th>
+                            </thead>
+                        </table>
+                        </a>
+                        <a href="#" class="phonenr_matches">
+                        <table class="table table-dark table-hover table-result-customers-check-phonenr">
+                            <thead>
+                                <th><i class="bx bx-plus"></i> Match op telefoonnummer
+                                <span style="float:right;" class="phoness"></span>
+                                </th>
+                            </thead>
+                        </table>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
         
             <div class="kms-tab-content searchodoo" style="z-index:99999999999999;">
@@ -2711,6 +2932,31 @@
         </div>
         
         <div class="kms-new-tab-left">
+
+            <div class="kms-tab-content matchings" style="display:none;">
+                <h3 class="kms-column-subtitle" style="font-weight: normal; color:#FFF;">Matching </h3>
+                <hr style="border-color:#FFF;">
+                <table class="table table-dark table_matches_action" style="width:100%; height:100%;">
+                    <tbody>
+                        <tr>
+                            <td><a class="btn btn-warning"><i class="bx bx-link"></i> linken</a></td>
+                            <td><a class="btn btn-danger"><i class="bx bx-trash"></i> verwijderen</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="max-height:600px; overflow-y:scroll;">
+                <table class="table table-dark table_matches" style="width:100%; height:700px; height:100%;">
+                    <tbody class="tbodymatches" id="tbody_table_matches">
+                    </tbody>
+                    <tbody class="tbodymatches" id="tbody_table_matches_lastnames">
+                    </tbody>
+                    <tbody class="tbodymatches" id="tbody_table_matches_phones">
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+
             <div class="kms-tab-content manual_pictures" style="display:none;">
                 <h3 class="kms-column-subtitle" style="font-weight: normal; color:#FFF;">Media </h3>
                 <hr style="border-color:#FFF;">
@@ -2747,6 +2993,92 @@
 
 
 
+        
+
+        <div class="modal fade mdl-edit-customers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Klant bewerken</h5>
+                        <button type="button" class="close closemdl closereload closeodoo" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/revision/merge" method="POST">
+                    <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                        <table class="table table-dark mt-2">
+                            <tbody>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice_customer_action" class="menuchoice_customer_action kms-checkboxes" value="relatecompany" checked></td>
+                                    <td>Klant(en) werknemer maken van bedrijf</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice_customer_action" class="menuchoice_customer_action kms-checkboxes" value="tocompany" ></td>
+                                    <td>Klant(en) omzetten van particulier naar bedrijf</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice_customer_action" class="menuchoice_customer_action kms-checkboxes" value="checklist" ></td>
+                                    <td>Klantenlijst checken op dubbele klanten</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer kms-modal-footer">
+                        <button class="btn btn-warning btnclientactions" type="button"><i class="bx bx-cog"></i> Acties uitvoeren</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade mdl-edit-company" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+            <div class="modal-dialog kms-modal" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header kms-modal-header kms-column-subtitle">
+                        <h5 class="modal-title" id="exampleModalLabel"> Klant bewerken</h5>
+                        <button type="button" class="close closemdl closereload closeodoo" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/revision/merge" method="POST">
+                    <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                        <input type="hidden" name="revision_id" class="rev_id_result_odoo">
+                        <input type="hidden" name="revision_id_old" class="rev_id_result_old_site">
+                        <input type="hidden" name="_token" class="_token">
+
+                        <p>Wat wilt u doen met de gekozen klanten?</p>
+                        <table class="table table-dark mt-2">
+                            <tbody>
+                                <tr>
+                                    <td><input type="radio" name="menuchoice_customer_action" class="menuchoice_customer_action kms-checkboxes" value="tocompany" ></td>
+                                    <td>Klant(en) omzetten van bedrijf naar particulier</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer kms-modal-footer">
+                        <button class="btn btn-warning" type="submit"><i class="bx bx-cog"></i> Acties uitvoeren</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="modal fade mdl-search-odoo-result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
             <div class="modal-dialog kms-modal" role="document">
                 <div class="modal-content" style="overflow:hidden;">
@@ -2762,7 +3094,7 @@
                         <input type="hidden" name="revision_id_old" class="rev_id_result_old_site">
 
                         <input type="hidden" name="_token" class="_token">
-                        <p>Wat wilt u doen met de gekozen repartie?</p>
+                        <p>Wat wilt u doen met de gekozen reparatie?</p>
                         <table class="table table-dark mt-2">
                             <tbody>
                                 <tr>

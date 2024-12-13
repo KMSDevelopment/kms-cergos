@@ -13,8 +13,22 @@ const props = defineProps({
     prev_page: String,
     total_customers: String,
     totalpages: String,
+    companies: Array
 })
 
+
+async function updateReference(e) {
+  try {
+    var id = e.target.id;
+    var value = e.target.value;
+    const response = await axios.post('/customer/reference/edit', {
+        value: value,
+        id: id,
+    });
+  } catch (error) {
+    console.error('Error updating customer');
+  }
+}
 async function updateFirstname(e) {
   try {
     var id = e.target.id;
@@ -82,6 +96,31 @@ async function updateCity(e) {
 </script>
 
 <template>
+
+    <div class="modal fade mdl-all-companies" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:99999999999999999;">
+        <div class="modal-dialog kms-modal" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header kms-modal-header kms-column-subtitle">
+                    <h5 class="modal-title" id="exampleModalLabel"> Klant bewerken</h5>
+                    <button type="button" class="close closemdl closereload closeodoo" data-dismiss="modal" aria-label="Close" style="font-size: 32px; position: absolute; right: 11px; top: 0px;">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body kms-modal-body" style="max-height: 600px; overflow-y:scroll; overflow-x:hidden;">
+                    <p>Kies een bedrijf</p>
+                    <select class="form form-control companies_id" name="companies_id">
+                        <option disabled selected value="">Maak een keuze..</option>
+                        <option v-for="company in companies" :value="company.id">{{ company.company_name }}</option>
+                    </select>
+                </div>
+                <div class="modal-footer kms-modal-footer">
+                    <button class="btn btn-warning btncompaniechoose" type="submit">Kiezen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
@@ -120,6 +159,9 @@ async function updateCity(e) {
                         <td class="menubar-button btn-new-customers">
                             Nieuw
                         </td>
+                        <td class="menubar-button btn-edit-customers">
+                            Bewerken
+                        </td>
                         <td class="menubar-button btn-import-customers">
                             Importeren
                         </td>
@@ -154,30 +196,31 @@ async function updateCity(e) {
                             <div class="col-12">
                                 <table class="table table-hover table-dark">
                                     <thead style="border-bottom: 5px solid rgb(52 52 52); line-height: 38px;">
-                                        <th></th>
-                                        <th></th>
+                                        <th style="width:100px;"></th>
+                                        <th style="width:150px;">Bron</th>
                                         <th>Referentie</th>
                                         <th style="padding-left:15px;">Voor -en achternaam</th>
                                         <th style="padding-left:15px;">Straatnaam</th>
                                         <th style="padding-left:15px;">Postcode</th>
                                         <th style="padding-left:15px;">Woonplaats</th>
                                         <th>Contact</th>
-                                        <th></th>
                                     </thead>
                                     <tbody>
                                         <tr v-for="customer in customers" :class="'allcsm api'+api_ids[customer.id] + ' customer'+customer.id">
                                             <td :class="'api'+api_ids[customer.id]">
-                                                <input type="checkbox" class="kms-checkboxes customerchbs" :value="customer.id"> 
+                                                <input type="checkbox" class="kms-checkboxes customerchbs" :value="customer.id" style="float:left; margin-right:15px;"> 
+                                                <a :href="'/customer/'+customer.id" title="Bekijk klant" style="margin-right:10px;"><i class="bx bx-user text-danger" style="font-size:21px;"></i> </a>
+                                                <a v-if="customer.comp_id != null" :href="'/company/'+customer.comp_id" title="Bekijk klant"><i class="bx bxs-business text-warning"></i> </a>
                                             </td>
-                                            <td>
-                                                <span class="alert alert-danger" style=" font-size: 10px; padding: 5px; background-color: transparent; color: #FFF;">{{ api_name[customer.id] }}</span>
+                                            <td style="text-align:center;">
+                                                <span class="alert alert-danger" style="margin-left:auto; margin-right:auto; font-size: 10px; padding: 5px; background-color: transparent; color: #FFF;">{{ api_name[customer.id] }}</span>
                                             </Td>
                                             <td style="text-decoration: underline;">
-                                                <a :href="'/customer/'+customer.id"><i class="bx bx-user text-danger"></i> {{ customer.reference }}</a>
+                                               <input type="text" style="height:30px; border:none; background:transparent; width:100px; color:#FFF;" :value="customer.reference" @keydown="updateReference($event)" @keyup="updateReference($event)" @change="updateReference($event)" :id="customer.id">
                                             </td>
                                             <td>
-                                                <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.firstname" @keydown="updateFirstname($event)" @keyup="updateFirstname($event)" @change="updateFirstname($event)" :id="customer.id">
-                                                <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.lastname" @keydown="updateLastname($event)" @keyup="updateLastname($event)" @change="updateLastname($event)" :id="customer.id">
+                                                <input type="text" style="height:30px; border:none; background:transparent; width:150px; color:#FFF;" :value="customer.firstname" @keydown="updateFirstname($event)" @keyup="updateFirstname($event)" @change="updateFirstname($event)" :id="customer.id">
+                                                <input type="text" style="height:30px; border:none; background:transparent; width:150px; color:#FFF;" :value="customer.lastname" @keydown="updateLastname($event)" @keyup="updateLastname($event)" @change="updateLastname($event)" :id="customer.id">
                                             </td>
                                             <td>
                                                 <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.address" @keydown="updateAddress($event)" @keyup="updateAddress($event)" @change="updateAddress($event)" :id="customer.id">
@@ -190,11 +233,8 @@ async function updateCity(e) {
                                                 <input type="text" style="height:30px; border:none; background:transparent; width:200px; color:#FFF;" :value="customer.city" @keydown="updateCity($event)" @keyup="updateCity($event)" @change="updateCity($event)" :id="customer.id">
                                             </td>
                                             <td>
-                                                <a style="margin-right:10px;" class="text-secondary" :href="'mailto:'+customer.email"><i class='bx bx-envelope'style="font-size:20px;"></i></a>
-                                                <a class="text-warning" :href="'tel:'+customer.phonenr"><i class='bx bxs-phone-call' style="font-size:20px;"></i></a>
-                                            </td>
-                                            <td>
-                                                <i class='bx bx-message-rounded-error' style="font-size:32px;"></i>
+                                                <a style="margin-right:10px;" class="text-secondary" :href="'mailto:'+customer.email"><i class='bx bx-envelope'style="font-size:24px;"></i></a>
+                                                <a class="text-warning" :href="'tel:'+customer.phonenr"><i class='bx bxs-phone-call' style="font-size:20px; margin-left:10px;"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -202,11 +242,11 @@ async function updateCity(e) {
                                 <table class="table table-dark">
                                     <tfoot>
                                         <tr>
-                                            <td><a class="btn btn-danger" :href="'/rkb/customers/'+prev_page" style="float:left;"><i class='bx bx-left-arrow-alt'></i> Vorige pagina</a></td>
+                                            <td><a class="text-white" :href="'/rkb/customers/'+prev_page" style="float:left;"><i class='bx bx-left-arrow-alt'></i> Vorige pagina</a></td>
                                             <td style="text-align: center; width:240px; position:relative;">
-                                                <span style="float:left;">pagina</span> <input type="text" class="form form-control inputpagecustomers" style="color:#FFF; border:none; width:65px; float:left; background:transparent; position:absolute; top:8px; left:60px; text-align: center;" :value="page"> / <a :href="'/rkb/customers/'+totalpages">{{ totalpages }}</a>
+                                                <span style="float:left;">pagina</span> <input type="text" class="form form-control inputpagecustomers" style="color:#FFF; border:none; width:65px; float:left; background:transparent; position:absolute; top:8px; left:60px; text-align: center;" :value="page"> / <a :href="'/rkb/customers/'+totalpages" style="margin-left:10px;">{{ totalpages }}</a>
                                             </td>
-                                            <td><a class="btn btn-danger" :href="'/rkb/customers/'+next_page" style="float:right;"><i class='bx bx-right-arrow-alt'></i> Volgende pagina</a></td>
+                                            <td><a class="text-white" :href="'/rkb/customers/'+next_page" style="float:right; padding-top:8px; padding-bottom:8px;">Volgende pagina <i class='bx bx-right-arrow-alt'></i> </a></td>
                                         </tr>
                                     </tfoot>
                                 </table>
