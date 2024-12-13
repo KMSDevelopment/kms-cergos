@@ -9,6 +9,7 @@ use App\Models\Api;
 use App\Models\BrandModels;
 use App\Models\Company;
 use App\Models\CustomerRevisions;
+use App\Models\LicensePlate;
 use App\Models\LinkedParts;
 use App\Models\Manuals;
 use App\Models\Media;
@@ -20,6 +21,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use PharIo\Manifest\License;
 
 class RevisionsController extends Controller
 {
@@ -65,13 +67,13 @@ class RevisionsController extends Controller
         $totalpages = round($total_revisions / 100);
 
         $rivisies = array();
+        $customers = array();
         foreach($revisions as $revision)
         {
             $revisionmodels = RevisionModels::where('revision_id', $revision->id)->get();
-            $revisioncustomers = $revision->customers;
             $revisiebrands = array();
             $revisiemodels = array();
-            $revisiecustomers = array();
+            $customer = array();
             $api = array();
             
             $api = Api::find($revision->api_id);
@@ -90,17 +92,21 @@ class RevisionsController extends Controller
                     }
                 }
             }
-
-            if( $revisioncustomers ){ 
-                foreach($revisioncustomers as $customer){
-                    if($customer->customer_id != ""){
-                        $customersdata = Customers::find($customer->customer_id);
-                        array_push($revisiecustomers, $customersdata);
-                    }
+     
+            $revisioncustomers = CustomerRevisions::where('revision_id', $revision->id)->get();
+            $countcustomer = 0;
+            foreach($revisioncustomers as $brandcustomer)
+            {
+                if($brandcustomer->customer)
+                {
+                    $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                    $customers[$revision->id] = $customer;
+                    $countcustomer = $countcustomer + 1;
                 }
             }
 
-            $rivisies[$revision->id] = array($revision->id, $revisioncustomers, $revisiecustomers, $revision->title, $revision->revision_desc, $revisiemodels, $revisiebrands, $apidata, $revision->checked, $revision->site, $revision->mgr);
+
+            $rivisies[$revision->id] = array($revision->id, $revisioncustomers, $customers, $revision->title, $revision->revision_desc, $revisiemodels, $revisiebrands, $apidata, $revision->checked, $revision->site, $revision->mgr);
         }
 
         $apis = Api::all();
@@ -131,12 +137,14 @@ class RevisionsController extends Controller
         $revisions = Revisions::where('id', '>=', $from)->with('customers')->with('revisionmodels')->orderBy('api_id', 'asc')->limit(100)->get();
 
         $rivisies = array();
+        $customers = array();
         foreach($revisions as $revision)
         {
             $revisionmodels = RevisionModels::where('revision_id', $revision->id)->get();
             $revisioncustomers = $revision->customers;
             $revisiebrands = array();
             $revisiemodels = array();
+            $customer = array();
             $revisiecustomers = array();
             $api = array();
             
@@ -157,14 +165,18 @@ class RevisionsController extends Controller
                 }
             }
 
-            if( $revisioncustomers ){ 
-                foreach($revisioncustomers as $customer){
-                    if($customer->customer_id != ""){
-                        $customersdata = Customers::find($customer->customer_id);
-                        array_push($revisiecustomers, $customersdata);
-                    }
+            $revisioncustomers = CustomerRevisions::where('revision_id', $revision->id)->get();
+            $countcustomer = 0;
+            foreach($revisioncustomers as $brandcustomer)
+            {
+                if($brandcustomer->customer)
+                {
+                    $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                    $customers[$revision->id] = $customer;
+                    $countcustomer = $countcustomer + 1;
                 }
             }
+
 
             $rivisies[$revision->id] = array($revision->id, $revisioncustomers, $revisiecustomers, $revision->title, $revision->revision_desc, $revisiemodels, $revisiebrands, $apidata);
         }
@@ -191,12 +203,14 @@ class RevisionsController extends Controller
         $totalpages = round($total_revisions / 100);
 
         $rivisies = array();
+        $customers = array();
         foreach($revisions as $revision)
         {
             $revisionmodels = RevisionModels::where('revision_id', $revision->id)->get();
             $revisioncustomers = $revision->customers;
             $revisiebrands = array();
             $revisiemodels = array();
+            $customer = array();
             $revisiecustomers = array();
             $api = array();
             
@@ -251,6 +265,7 @@ class RevisionsController extends Controller
         $totalpages = round($total_revisions / 100);
 
         $rivisies = array();
+        $customers = array();
 
 
         foreach($revisions as $revision)
@@ -263,6 +278,7 @@ class RevisionsController extends Controller
 
             $revisiebrands = array();
             $revisiemodels = array();
+            $customer = array();
             $revisiecustomers = array();
             $api = array();
             
@@ -318,6 +334,7 @@ class RevisionsController extends Controller
         $totalpages = round($total_revisions / 100);
 
         $rivisies = array();
+        $customers = array();
 
 
         foreach($revisions as $revision)
@@ -329,6 +346,7 @@ class RevisionsController extends Controller
 
             $revisiebrands = array();
             $revisiemodels = array();
+            $customer = array();
             $revisiecustomers = array();
             $api = array();
             
@@ -420,6 +438,7 @@ class RevisionsController extends Controller
 
         $cars = Brand::with('models')->with('customers')->with('revisions')->limit(15)->get();
         $ticket_nrs = array();
+        $kentekens = array();
         $customers = array();
 
         $apiarray = array();
@@ -427,21 +446,36 @@ class RevisionsController extends Controller
 
         foreach($cars as $car)
         {
-            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->where('revision_id', '!=', 0)->get();
-            foreach($brandcustomers as $brandcustomer)
-            {
-                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
-                if($brandcustomer->customer_id)
-                {
-                    $customerdata = Customers::find($brandcustomer->customer_id);
-                    $customers[$car->id] = "<a href='/customer/".$customerdata->id."'>".$customerdata->firstname." ".$customerdata->lastname."></a>";
-                }
-            }
+            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->with('customer')->where('revision_id', '!=', 0)->get();
 
             $api = Api::find($car->api_id);
             $api_ids[$car->id] = $api->id;
             $apiarray[$car->id] = $api->platform;
+            $countcustomer = 0;
+            $countlicenses = 0;
+            $customer = array();
+            $kenteken = array();
+            
+            foreach($brandcustomers as $brandcustomer)
+            {
+                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
+                if($brandcustomer->customer)
+                {
+                    $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                    $customers[$car->id] = $customer;
+                    $countcustomer = $countcustomer + 1;
+                }
+            }
+            
+            $licenses = LicensePlate::where('brand_id',$car->id)->get();
+            foreach($licenses as $license)
+            {
+                $kenteken[$countlicenses] = [$license->license_plate, $license->customer_id, $license->eerste_tenaamstelling, $license->vervaldatum_apk];
+                $kentekens[$car->id] = $kenteken;
+                $countlicenses = $countlicenses + 1;
+            }
         }
+
 
         $apis = Api::all();
 
@@ -451,7 +485,9 @@ class RevisionsController extends Controller
             'current_page'=> $current_page,
             'totalpages'=>$totalpages,
             'total_cars'=>$total_cars,
-            'apis' => $apis
+            'apis' => $apis,
+            'customers'=>$customers,
+            'kentekens'=>$kentekens
         ]);
     }
 
@@ -480,20 +516,24 @@ class RevisionsController extends Controller
 
         foreach($cars as $car)
         {
-            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->where('revision_id', '!=', 0)->get();
-            foreach($brandcustomers as $brandcustomer)
-            {
-                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
-                if($brandcustomer->customer_id)
-                {
-                    $customerdata = Customers::find($brandcustomer->customer_id);
-                    $customers[$car->id] = "<a href='/customer/".$customerdata->id."'>".$customerdata->firstname." ".$customerdata->lastname."></a>";
-                }
-            }
+            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->with('customer')->where('revision_id', '!=', 0)->get();
 
             $api = Api::find($car->api_id);
             $api_ids[$car->id] = $api->id;
             $apiarray[$car->id] = $api->platform;
+            $countcustomer = 0;
+            $customer = array();
+            
+            foreach($brandcustomers as $brandcustomer)
+            {
+                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
+                if($brandcustomer->customer)
+                {
+                    $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                    $customers[$car->id] = $customer;
+                    $countcustomer = $countcustomer + 1;
+                }
+            }
         }
         $apis = Api::all();
 
@@ -503,7 +543,8 @@ class RevisionsController extends Controller
             'current_page'=> $page,
             'totalpages'=>$totalpages,
             'total_cars'=>$total_cars,
-            'apis' => $apis
+            'apis' => $apis,
+            'customers'=>$customers
         ]);
     }
 
@@ -530,20 +571,24 @@ class RevisionsController extends Controller
 
         foreach($cars as $car)
         {
-            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->where('revision_id', '!=', 0)->get();
-            foreach($brandcustomers as $brandcustomer)
-            {
-                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
-                if($brandcustomer->customer_id)
-                {
-                    $customerdata = Customers::find($brandcustomer->customer_id);
-                    $customers[$car->id] = "<a href='/customer/".$customerdata->id."'>".$customerdata->firstname." ".$customerdata->lastname."></a>";
-                }
-            }
+            $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->with('customer')->where('revision_id', '!=', 0)->get();
 
             $api = Api::find($car->api_id);
             $api_ids[$car->id] = $api->id;
             $apiarray[$car->id] = $api->platform;
+            $countcustomer = 0;
+            $customer = array();
+            
+            foreach($brandcustomers as $brandcustomer)
+            {
+                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
+                if($brandcustomer->customer)
+                {
+                    $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                    $customers[$car->id] = $customer;
+                    $countcustomer = $countcustomer + 1;
+                }
+            }
         }
         $apis = Api::all();
 
@@ -553,7 +598,8 @@ class RevisionsController extends Controller
             'totalpages'=>1,
             'total_cars'=>$total_cars,
             'apis' => $apis,
-            'current_page' => $current_page
+            'current_page' => $current_page,
+            'customers'=>$customers
         ]);
     }
 
@@ -577,11 +623,23 @@ class RevisionsController extends Controller
             $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->where('revision_id', '!=', 0)->get();
             foreach($brandcustomers as $brandcustomer)
             {
-                $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
-                if($brandcustomer->customer_id)
+                $brandcustomers = CustomerRevisions::where('brand_id', $car->id)->with('customer')->where('revision_id', '!=', 0)->get();
+    
+                $api = Api::find($car->api_id);
+                $api_ids[$car->id] = $api->id;
+                $apiarray[$car->id] = $api->platform;
+                $countcustomer = 0;
+                $customer = array();
+                
+                foreach($brandcustomers as $brandcustomer)
                 {
-                    $customerdata = Customers::find($brandcustomer->customer_id);
-                    $customers[$car->id] = "<a href='/customer/".$customerdata->id."'>".$customerdata->firstname." ".$customerdata->lastname."></a>";
+                    $ticket_nrs[$car->id] = $brandcustomer->ticket_no;
+                    if($brandcustomer->customer)
+                    {
+                        $customer[$countcustomer] = [$brandcustomer->customer->id, $brandcustomer->customer->firstname, $brandcustomer->customer->lastname];
+                        $customers[$car->id] = $customer;
+                        $countcustomer = $countcustomer + 1;
+                    }
                 }
             }
 
@@ -597,7 +655,8 @@ class RevisionsController extends Controller
             'totalpages'=>1,
             'total_cars'=>$total_cars,
             'apis' => $apis,
-            'current_page' => $current_page
+            'current_page' => $current_page,
+            'customers'=>$customers
         ]);
     }
 

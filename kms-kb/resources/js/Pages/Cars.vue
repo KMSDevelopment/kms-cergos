@@ -11,7 +11,8 @@ const props = defineProps({
     totalpages: Array,
     current_page: Array,
     total_cars: Array,
-    apis: Array
+    apis: Array,
+    kentekens: Array
 })
 
 
@@ -143,9 +144,12 @@ async function updateCarBrand(e) {
 
         <section class="body">
             <div class="container">
+
+
                 <div class="row justify-center" style="position:relative !important;">
                     <div :class="'kms-body-column col-md-6 col-sm-12 col-lg-5 bg-gray-800 text-white kms-column-border car'+item.id" :id=item.brand.toLowerCase() style="position:relative; overflow:hidden;" v-for="item in cars">
 
+                        
                         <div class="kms-checker" data-toggle="tooltip" data-placement="bottom" title="Check als dit automerk is gecontroleerd">
                             <input type="checkbox" class="kms-check-checker checkcar" :id="item.id" :value="item.checked" :checked="item.checked =='1'">
                         </div>
@@ -157,8 +161,22 @@ async function updateCarBrand(e) {
                             <a v-if="item.logo == NULL" href="#"  id="btn-upload-logo" :alt="item.id"><i class="bx bx-image-add" style="float:right; top:20px; height:65px; position:absolute; right:25px; font-size:24px;"></i></a>
                         </h3>
                         <hr>
-                        <br/>
-                        <div class="row">
+
+                        
+                        <div class="status-bar" style="padding-bottom:0px;">
+                            <div class="table-responsive">
+                                <table style="margin-bottom:10px;"><!-- to do -->
+                                    <tr>
+                                        <td v-for="kenteken in kentekens[item.id]">
+                                            <a v-if="kenteken[1] != ''" :href="'/customer/'+kenteken[1]" class="kmi-badge kmi-badge-warning" style=" float:right; min-width:200px; margin-right:5px; margin-left:5px;">{{ kenteken[0] }}</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-4">
                             <div class="col-lg-7 col-md-12 col-sm-12 pb-4">
                                 <h4 class="kms-column-subtitle" style="font-size:13px;"><a href="#" id="btn-link-model" :alt="item.id" :title="item.brand"><i class='bx bx-plus-circle' style="font-size:19px; float:right;"></i> Modellen</a><hr style="border-width:2px; border-color:#ff0000;"></h4>
                                 <div style="max-height:250px; overflow-x:hidden; overflow-y:scroll;">
@@ -178,10 +196,10 @@ async function updateCarBrand(e) {
                             </div>
                             <div class="col-lg-5 col-md-12 col-sm-12">
                                 <h4 class="kms-column-subtitle " style="font-size:13px;"><a href="#" id="btn-link-klanten" :alt="item.id" :title="item.brand"><i class='bx bx-plus-circle' style="font-size:19px; float:right;"></i> Klanten<hr style="border-width:2px; border-color:#ff0000;"></a></h4>
-                                <div style="max-height:270px; overflow-y:scroll; overflow-x:hidden;">
+                                <div style="min-height:270px; max-height:530px; overflow-y:scroll; overflow-x:hidden;">
                                     <ul class="pt-3">
-                                        <li class="kms-list-link" v-for="customer in item.customers">
-                                            <a :href="'/customer/'+customer.id" :alt="customer.id" id="docs-card" style="width:100%" class="model_li">{{ customer.firstname }} {{ customer.lastname }}<svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /></svg></a>
+                                        <li class="kms-list-link" v-for="customer in customers[item.id]">
+                                            <a :href="'/customer/'+customer[0]" target="_BLANK" :alt="customer[0]" id="docs-card" style="width:100%">{{ customer[1] }} {{ customer[2] }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /></svg></a>
                                         </li>
                                     </ul>
                                 </div>

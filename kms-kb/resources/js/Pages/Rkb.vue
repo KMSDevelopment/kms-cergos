@@ -199,7 +199,7 @@ async function updateRevisionComplain(e) {
                         top: -2px;
                         padding-left:35px;
                         padding-right:20px;
-                        left: 270px;
+                        left: 250px;
                         background: #191f29;
                         box-shadow: rgb(23 217 147) 0px 1px 4px;
                         border-color: green;" title="Aanwezig in my gadget repairs"><i class='bx bx-check' style="font-size:25px; top:0px; opacity:0.4; left:5px; position:absolute;"></i> MY GADGET REPAIRS</span>
@@ -260,7 +260,7 @@ async function updateRevisionComplain(e) {
                                 </h4>
                                 
                                 <ul class="pt-3 ">
-                                    <li class="kms-list-link" v-for="customer in item[2]"><a :href="'/customer/'+customer.id" id="docs-card" style="width:100%" class="model_li">{{ customer.firstname }} {{ customer.lastname }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg></a></li>
+                                    <li class="kms-list-link" v-for="customer in item[2]"><a :href="'/customer/'+customer[0]" id="docs-card" style="width:100%" class="model_li">{{ customer[1] }} {{ customer[2] }} <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" style="float:right;"> <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" /> </svg></a></li>
                                 </ul>
                             </div>
                         </div>
